@@ -1,0 +1,84 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http.Json;
+using System.Text;
+using System.Text.Json;
+using System.Threading.Tasks;
+using App_OficinaVirtual.DTO;
+using System.Diagnostics;
+
+namespace App_OficinaVirtual.Services;
+
+public class UsuarioService
+{
+    private readonly HttpClient _httpClient;
+    private readonly JsonSerializerOptions _options;
+    private readonly string _baseUrl = "http://localhost:8000/usuarios"; 
+
+    public UsuarioService(HttpClient httpClient, JsonSerializerOptions options)
+    {
+        _httpClient = httpClient;
+        _options = options;
+    }
+
+    public async Task<List<UsuarioResponseDto>> LeerTodosAsync()
+    {
+        var respuesta = await _httpClient.GetAsync(_baseUrl);
+        if (!respuesta.IsSuccessStatusCode) return new List<UsuarioResponseDto>();
+
+        var contenido = await respuesta.Content.ReadAsStringAsync();
+        return JsonSerializer.Deserialize<List<UsuarioResponseDto>>(contenido, _options);
+    }
+
+    public async Task<UsuarioResponseDto> LeerPorIdAsync(int id)
+    {
+        var respuesta = await _httpClient.GetAsync($"{_baseUrl}/{id}");
+        if (!respuesta.IsSuccessStatusCode) return null;
+
+        var contenido = await respuesta.Content.ReadAsStringAsync();
+        return JsonSerializer.Deserialize<UsuarioResponseDto>(contenido, _options);
+    }
+
+
+
+    public async Task<UsuarioResponseDto> CrearAsync(UsuarioCreateDto dto)
+    {
+        try
+        {
+            var json = JsonSerializer.Serialize(dto, _options);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            
+            var respuesta = await _httpClient.PostAsync(_baseUrl, content);
+            if (!respuesta.IsSuccessStatusCode)
+            {
+                var errorContent = await respuesta.Content.ReadAsStringAsync();
+                Debug.WriteLine($"Error al crear usuario: {errorContent}");
+                return null;
+            }
+
+            var contenido = await respuesta.Content.ReadAsStringAsync();
+            return JsonSerializer.Deserialize<UsuarioResponseDto>(contenido, _options);
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"Excepción al crear usuario: {ex.Message}");
+            return null;
+        }
+    }
+
+    public async Task<UsuarioResponseDto> ActualizarAsync(int id, UsuarioUpdateDto dto)
+    {
+        var respuesta = await _httpClient.PutAsJsonAsync($"{_baseUrl}/{id}", dto);
+        if (!respuesta.IsSuccessStatusCode) return null;
+
+        var contenido = await respuesta.Content.ReadAsStringAsync();
+        return JsonSerializer.Deserialize<UsuarioResponseDto>(contenido, _options);
+    }
+
+    public async Task<bool> EliminarAsync(int id)
+    {
+        var respuesta = await _httpClient.DeleteAsync($"{_baseUrl}/{id}");
+        return respuesta.IsSuccessStatusCode;
+    }
+}

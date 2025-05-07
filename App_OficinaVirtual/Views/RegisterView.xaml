@@ -1,0 +1,92 @@
+    <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                 xmlns:vm="clr-namespace:App_OficinaVirtual.ViewModels"
+                 x:Class="App_OficinaVirtual.Views.RegisterView"
+                 BackgroundImageSource="background.png"
+                 x:DataType="vm:RegisterViewModel">
+
+        <ScrollView>
+            <VerticalStackLayout Padding="30" VerticalOptions="CenterAndExpand" Spacing="25">
+
+                <Frame BackgroundColor="White" CornerRadius="30" Padding="15" HasShadow="True"
+                       WidthRequest="300" HorizontalOptions="Center">
+
+                    <VerticalStackLayout Spacing="15" HorizontalOptions="CenterAndExpand">
+
+                        <Image Source="register_icon.png"
+                               HeightRequest="50"
+                               HorizontalOptions="Center" />
+
+                        <Label Text="Crear cuenta" FontSize="20" FontAttributes="Bold"
+                               HorizontalOptions="Center" TextColor="Black"/>
+
+                  
+                        <Entry Placeholder="Nombre completo"
+                               Text="{Binding Nombre}"
+                               TextColor="Black"
+                               PlaceholderColor="Gray" />
+
+                        <Entry Placeholder="Correo electrónico"
+                               Text="{Binding Email}"
+                               Keyboard="Email"
+                               TextColor="Black"
+                               PlaceholderColor="Gray" />
+
+                    
+                        <Entry Placeholder="Contraseña"
+                               IsPassword="True"
+                               Text="{Binding Contrasena}"
+                               TextColor="Black"
+                               PlaceholderColor="Gray" />
+
+                    
+                        <Picker Title="Seleccionar Rol"
+                            ItemsSource="{Binding Roles}"
+                            SelectedItem="{Binding RolSeleccionado}"
+                            ItemDisplayBinding="{Binding Nombre}"
+                            TextColor="Black" />
+
+
+                    
+                        <Entry Placeholder="URL de la imagen"
+                               Text="{Binding ImagenUrl}"
+                               TextColor="Black"
+                               PlaceholderColor="Gray" />
+
+                        <Frame BackgroundColor="#F5F5F5" 
+                               CornerRadius="10" 
+                               Padding="10"
+                               HasShadow="False">
+                            <VerticalStackLayout>
+                                <Label Text="Estado actual:"
+                                       FontAttributes="Bold"
+                                       TextColor="Black" />
+                                <Label Text="{Binding Estado}"
+                                       TextColor="Black"
+                                       FontSize="14" />
+                            </VerticalStackLayout>
+                        </Frame>
+
+                        <Label Text="{Binding MensajeError}"
+                               TextColor="Red"
+                               FontSize="12"
+                               IsVisible="{Binding HayError}" />
+
+                    
+                        <Button Text="Registrarse"
+                                BackgroundColor="#10D07F"
+                                TextColor="White"
+                                CornerRadius="10"
+                                Command="{Binding RegistrarUsuarioCommand}" />
+
+                    
+                        <Button Text="¿Ya tienes cuenta? Inicia sesión"
+                                TextColor="#5D6BE6"
+                                BackgroundColor="Transparent"
+                                Command="{Binding IrALoginCommand}" />
+
+                    </VerticalStackLayout>
+                </Frame>
+            </VerticalStackLayout>
+        </ScrollView>
+    </ContentPage>

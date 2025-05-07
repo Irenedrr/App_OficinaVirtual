@@ -1,0 +1,56 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:App_OficinaVirtual.ViewModels"
+             x:Class="App_OficinaVirtual.Views.LoginView"
+             BackgroundImageSource="background.png"
+             x:DataType="vm:LoginViewModel">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="30" VerticalOptions="CenterAndExpand" Spacing="25">
+
+            <Frame BackgroundColor="White" CornerRadius="30" Padding="15" HasShadow="True"
+                   WidthRequest="300" HorizontalOptions="Center">
+
+                <VerticalStackLayout Spacing="15" HorizontalOptions="CenterAndExpand">
+
+                    <Image Source="login_icon.png"
+                           HeightRequest="50"
+                           HorizontalOptions="Center" />
+
+                    <Label Text="Bienvenido/a" FontSize="20" FontAttributes="Bold"
+                           HorizontalOptions="Center" TextColor="Black"/>
+
+                    <Entry Placeholder="Correo electrónico"
+                           Text="{Binding Correo}"
+                           Keyboard="Email"
+                           TextColor="Black"
+                           PlaceholderColor="Gray" />
+
+                    <Entry Placeholder="Contraseña"
+                           IsPassword="True"
+                           Text="{Binding Contrasena}"
+                           TextColor="Black"
+                           PlaceholderColor="Gray" />
+
+                    <Label Text="{Binding MensajeError}"
+                           TextColor="Red"
+                           FontSize="12"
+                           IsVisible="{Binding HayError}" />
+
+                    <Button Text="Iniciar sesión"
+                            BackgroundColor="#10D07F"
+                            TextColor="White"
+                            CornerRadius="10"
+                            Command="{Binding IniciarSesionCommand}" />
+
+                    <Button Text="¿No tienes cuenta? Regístrate"
+                            TextColor="#5D6BE6"
+                            BackgroundColor="Transparent"
+                            Command="{Binding IrARegistroCommand}" />
+
+                </VerticalStackLayout>
+            </Frame>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
+
