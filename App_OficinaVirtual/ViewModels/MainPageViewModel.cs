@@ -24,6 +24,8 @@ public partial class MainPageViewModel : ObservableObject
     [ObservableProperty]
     private string fotoPerfil;
 
+    
+
     public MainPageViewModel(UsuarioService usuarioService, AuthService authService)
     {
         _usuarioService = usuarioService;
@@ -61,4 +63,6 @@ public partial class MainPageViewModel : ObservableObject
         _authService.Logout();
         await Shell.Current.GoToAsync("//login", true);
     }
+
+   
 }

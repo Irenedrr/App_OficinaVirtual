@@ -9,6 +9,6 @@ public partial class AjustesView : ContentView
     {
         InitializeComponent();
         BindingContext = ajustesViewModel;
-        Debug.WriteLine("?? BindingContext aplicado: " + BindingContext?.GetType().Name);
+        
     }
 }

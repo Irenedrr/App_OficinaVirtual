@@ -21,5 +21,10 @@
         Route="registro"
         ContentTemplate="{DataTemplate views:RegisterView}" />
 
+    <ShellContent
+        Route="ajustes"
+        ContentTemplate="{DataTemplate views:AjustesView}"
+        IsVisible="False" />
+
 </Shell>
 

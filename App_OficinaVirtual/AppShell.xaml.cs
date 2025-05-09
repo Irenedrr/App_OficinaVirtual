@@ -12,6 +12,7 @@ public partial class AppShell : Shell
         Routing.RegisterRoute("login", typeof(LoginView));
         Routing.RegisterRoute("registro", typeof(RegisterView));
         Routing.RegisterRoute("home", typeof(MainPage));
+        Routing.RegisterRoute("ajustes", typeof(AjustesView));
 
 
 
@@ -33,7 +34,7 @@ public partial class AppShell : Shell
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine($"Error en la navegación inicial: {ex.Message}");
+            System.Diagnostics.Debug.WriteLine($"Error en la navegación: {ex.Message}");
         }
     }
 

@@ -13,11 +13,6 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <!-- Panel dinamico -->
-        <Grid x:Name="PanelContenedor"
-           Grid.Column="1"
-           HorizontalOptions="Fill"
-           VerticalOptions="Fill" />
 
 
         <Frame Grid.Column="0"
@@ -38,7 +33,7 @@
                 <StackLayout Grid.Row="0"
                      VerticalOptions="Start"
                      HorizontalOptions="Center"
-                     Spacing="30">
+                     Spacing="45">
                     <Image Source="hogar.png" HeightRequest="28" WidthRequest="28" />
                     <Image Source="usuarios.png" HeightRequest="28" WidthRequest="28" />
                     <Image Source="calendario.png" HeightRequest="28" WidthRequest="28" />
@@ -47,7 +42,7 @@
                            HeightRequest="28"
                            WidthRequest="28">
                         <Image.GestureRecognizers>
-                            <TapGestureRecognizer Tapped="AbrirAjustes_Clicked" />
+                            <TapGestureRecognizer Command="{Binding AjustesCommand}" />
                         </Image.GestureRecognizers>
                     </Image>
                 </StackLayout>
@@ -77,7 +72,7 @@
                        TextColor="Gray" />
             </ContentView>
 
-      
+
 
             <Grid VerticalOptions="End"
                   HorizontalOptions="FillAndExpand"
@@ -97,7 +92,7 @@
                  VerticalOptions="Center"
                  Spacing="20">
 
-                    
+
                         <Frame Padding="0"
                            CornerRadius="100"
                            HeightRequest="36"
@@ -116,12 +111,10 @@
                             <Label Text="{Binding EstadoConexion}" FontSize="10" TextColor="Black" />
                         </StackLayout>
 
-                       
+
                     </StackLayout>
                 </Frame>
             </Grid>
-            
-            
         </Grid>
     </Grid>
 </ContentPage>
