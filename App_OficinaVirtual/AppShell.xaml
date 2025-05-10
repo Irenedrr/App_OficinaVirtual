@@ -1,25 +1,56 @@
-<?xml version="1.0" encoding="UTF-8" ?>
 <Shell
     x:Class="App_OficinaVirtual.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:App_OficinaVirtual"
     xmlns:views="clr-namespace:App_OficinaVirtual.Views"
-    Shell.FlyoutBehavior="Disabled"
-    Title="App_OficinaVirtual">
+    Shell.FlyoutBehavior="Flyout">
 
-    <ShellContent
-        
-        ContentTemplate="{DataTemplate views:MainPage}"
-        Route="home" />
+
+
+    <Shell.FlyoutHeader>
+        <StackLayout Padding="30" BackgroundColor="#9d8cfb" >
+            <Label Text="!Bienvenido!" TextColor="White" FontAttributes="Bold" FontSize="Title"/>
+        </StackLayout>
+    </Shell.FlyoutHeader>
+
+    
+    <FlyoutItem Icon="hogar.png" Route="home" Title="Inicio">
+        <ShellContent ContentTemplate="{DataTemplate views:MainPage}" />
+    </FlyoutItem>
+
+    <FlyoutItem Icon="comentario.png" Title="Chats">
+        <ShellContent ContentTemplate="{DataTemplate views:ComentarioView}" />
+    </FlyoutItem>
+
+    <FlyoutItem Icon="usuarios.png" Title="Usuarios">
+        <ShellContent ContentTemplate="{DataTemplate views:UsuariosView}" />
+    </FlyoutItem>
+
+    <FlyoutItem Icon="calendario.png" Title="Eventos">
+        <ShellContent ContentTemplate="{DataTemplate views:CalendarioView}" />
+    </FlyoutItem>
+
+    <FlyoutItem Icon="ajustes.png" Title="Ajustes" Route="ajustes">
+        <ShellContent ContentTemplate="{DataTemplate views:AjustesView}" />
+    </FlyoutItem>
+
+    <FlyoutItem Icon="energia.png" Route="login" >
+        <ShellContent ContentTemplate="{DataTemplate views:LoginView}" />
+    </FlyoutItem>
+
+
+
+
 
     <ShellContent
         Route="login"
-        ContentTemplate="{DataTemplate views:LoginView}" />
+        ContentTemplate="{DataTemplate views:LoginView}"
+        IsVisible="False" />
 
     <ShellContent
         Route="registro"
-        ContentTemplate="{DataTemplate views:RegisterView}" />
+        ContentTemplate="{DataTemplate views:RegisterView}"
+        IsVisible="False" />
 
     <ShellContent
         Route="ajustes"
@@ -27,4 +58,5 @@
         IsVisible="False" />
 
 </Shell>
+
 

@@ -9,4 +9,11 @@ public partial class LoginView : ContentPage
 		InitializeComponent();
         BindingContext = loginViewModel;
     }
+
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+        Shell.Current.FlyoutBehavior = FlyoutBehavior.Disabled;
+    }
+
 }

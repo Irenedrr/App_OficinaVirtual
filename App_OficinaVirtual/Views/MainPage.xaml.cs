@@ -15,8 +15,13 @@ namespace App_OficinaVirtual.Views
             BindingContext = mainViewModel;
         }
 
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            Shell.Current.FlyoutBehavior = FlyoutBehavior.Flyout;
+        }
 
-     
+
 
 
     }

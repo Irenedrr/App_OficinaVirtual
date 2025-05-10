@@ -1,99 +1,39 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+﻿<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:App_OficinaVirtual.ViewModels"
-             xmlns:local="clr-namespace:App_OficinaVirtual.Views"
              x:Class="App_OficinaVirtual.Views.MainPage"
              x:DataType="vm:MainPageViewModel"
              BackgroundColor="White">
 
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="80" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
 
+        <ContentView>
+            <Label Text="Contenido Principal"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center"
+                   TextColor="Gray" />
+        </ContentView>
 
+       
+        <Grid VerticalOptions="End"
+              HorizontalOptions="FillAndExpand"
+              Padding="0,0,0,20">
+            <Frame BackgroundColor="#9d8cfb"
+                   CornerRadius="20"  
+                   HeightRequest="50"
+                   WidthRequest="360"
+                   HorizontalOptions="Center"
+                   VerticalOptions="End"
+                   HasShadow="False"
+                   BorderColor="Transparent"
+                   Padding="0">
 
-        <Frame Grid.Column="0"
-       BorderColor="LightGray"
-       Padding="0"
-       HasShadow="False"
-       CornerRadius="0"
-       BackgroundColor="#9d8cfb">
-            <Grid VerticalOptions="FillAndExpand"
-          HorizontalOptions="Center"
-          Padding="0,40">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
+                <StackLayout Orientation="Horizontal"
+                             HorizontalOptions="Center"
+                             VerticalOptions="Center"
+                             Spacing="20">
 
-               
-                <StackLayout Grid.Row="0"
-                     VerticalOptions="Start"
-                     HorizontalOptions="Center"
-                     Spacing="45">
-                    <Image Source="hogar.png" HeightRequest="28" WidthRequest="28" />
-                    <Image Source="usuarios.png" HeightRequest="28" WidthRequest="28" />
-                    <Image Source="calendario.png" HeightRequest="28" WidthRequest="28" />
-                    <Image Source="comentario.png" HeightRequest="28" WidthRequest="28" />
-                    <Image Source="ajustes.png"
-                           HeightRequest="28"
-                           WidthRequest="28">
-                        <Image.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding AjustesCommand}" />
-                        </Image.GestureRecognizers>
-                    </Image>
-                </StackLayout>
-
-                
-                <Image Grid.Row="1"
-               Source="energia.png"
-               HeightRequest="28"
-               WidthRequest="28"
-               HorizontalOptions="Center"
-               Margin="0,40,0,0">
-                    <Image.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding CerrarSesionCommand}" />
-                    </Image.GestureRecognizers>
-                </Image>
-            </Grid>
-        </Frame>
-
-
-
-        <Grid Grid.Column="1">
-            
-            <ContentView>
-                <Label Text="Contenido Principal"
-                       HorizontalOptions="Center"
-                       VerticalOptions="Center"
-                       TextColor="Gray" />
-            </ContentView>
-
-
-
-            <Grid VerticalOptions="End"
-                  HorizontalOptions="FillAndExpand"
-                  Padding="0,0,0,20">
-                <Frame BackgroundColor="#9d8cfb"
-                     CornerRadius="20"  
-                     HeightRequest="50"
-                      WidthRequest="360"
-                     HorizontalOptions="Center"
-                     VerticalOptions="End"
-                     HasShadow="False"
-                    BorderColor="Transparent"
-                     Padding="0">
-
-                    <StackLayout Orientation="Horizontal"
-                 HorizontalOptions="Center"
-                 VerticalOptions="Center"
-                 Spacing="20">
-
-
-                        <Frame Padding="0"
+                    <Frame Padding="0"
                            CornerRadius="100"
                            HeightRequest="36"
                            WidthRequest="36"
@@ -102,22 +42,22 @@
                            BorderColor="Transparent"
                            VerticalOptions="Center"
                            HorizontalOptions="Start">
-                            <Image Source="{Binding FotoPerfil}"
+                        <Image Source="{Binding FotoPerfil}"
                                Aspect="AspectFill" />
-                        </Frame>
+                    </Frame>
 
-                        <StackLayout VerticalOptions="Center" Spacing="0">
-                            <Label Text="{Binding NombreUsuario}" FontAttributes="Bold" FontSize="12" TextColor="White" />
-                            <Label Text="{Binding EstadoConexion}" FontSize="10" TextColor="Black" />
-                        </StackLayout>
-
-
+                    <StackLayout VerticalOptions="Center" Spacing="0">
+                        <Label Text="{Binding NombreUsuario}" FontAttributes="Bold" FontSize="12" TextColor="White" />
+                        <Label Text="{Binding EstadoConexion}" FontSize="10" TextColor="Black" />
                     </StackLayout>
-                </Frame>
-            </Grid>
+
+                </StackLayout>
+            </Frame>
         </Grid>
+
     </Grid>
 </ContentPage>
+
 
     
 
