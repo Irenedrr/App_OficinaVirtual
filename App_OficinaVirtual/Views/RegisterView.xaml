@@ -2,8 +2,7 @@
                  xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                  xmlns:vm="clr-namespace:App_OficinaVirtual.ViewModels"
                  x:Class="App_OficinaVirtual.Views.RegisterView"
-                 BackgroundImageSource="background.png"
-                 x:DataType="vm:RegisterViewModel">
+                 BackgroundImageSource="background.png">
 
         <ScrollView>
             <VerticalStackLayout Padding="30" VerticalOptions="CenterAndExpand" Spacing="25">
@@ -20,40 +19,80 @@
                         <Label Text="Crear cuenta" FontSize="20" FontAttributes="Bold"
                                HorizontalOptions="Center" TextColor="Black"/>
 
-                  
-                        <Entry Placeholder="Nombre completo"
+                    <Label Text="Estable un nombre" FontAttributes="Bold" TextColor="Black" />
+                    <Entry Placeholder="Nombre completo"
                                Text="{Binding Nombre}"
                                TextColor="Black"
                                PlaceholderColor="Gray" />
-
+                    <Label Text="Estable un correo" FontAttributes="Bold" TextColor="Black" />
                         <Entry Placeholder="Correo electrónico"
                                Text="{Binding Email}"
                                Keyboard="Email"
                                TextColor="Black"
                                PlaceholderColor="Gray" />
 
-                    
-                        <Entry Placeholder="Contraseña"
+                    <Label Text="Estable una contraseña" FontAttributes="Bold" TextColor="Black" />
+                    <Entry Placeholder="Contraseña"
                                IsPassword="True"
                                Text="{Binding Contrasena}"
                                TextColor="Black"
                                PlaceholderColor="Gray" />
 
-                    
-                        <Picker Title="Seleccionar Rol"
+                    <Label Text="Selecciona tu rol:" FontAttributes="Bold" TextColor="Black" />
+                    <Picker Title="Seleccionar Rol"
                             ItemsSource="{Binding Roles}"
                             SelectedItem="{Binding RolSeleccionado}"
                             ItemDisplayBinding="{Binding Nombre}"
                             TextColor="Black" />
 
+                    <Label Text="Selecciona imagen:" FontAttributes="Bold" TextColor="Black" />
 
-                    
-                        <Entry Placeholder="URL de la imagen"
-                               Text="{Binding ImagenUrl}"
-                               TextColor="Black"
-                               PlaceholderColor="Gray" />
+                    <Button Text="Elegir imagen" Command="{Binding ElegirImagenCommand}" />
 
-                        <Frame BackgroundColor="#F5F5F5" 
+                    <Image Source="{Binding ImagenUrl}" HeightRequest="100" Aspect="AspectFit" />
+
+
+                    <Label Text="Selecciona tu personaje:" FontAttributes="Bold" TextColor="Black" />
+
+                    <CollectionView ItemsSource="{Binding Personajes}"
+                SelectionMode="Single"
+                SelectedItem="{Binding PersonajeSeleccionado}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Frame BorderColor="LightGray" CornerRadius="10" Padding="5" Margin="5">
+                                    <StackLayout>
+                                        <Image Source="{Binding Imagen}" HeightRequest="100" Aspect="AspectFill"/>
+                                        <Label Text="{Binding Nombre}" HorizontalOptions="Center" TextColor="Black"/>
+                                    </StackLayout>
+                                </Frame>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+
+
+
+
+                    <Label Text="Selecciona tu oficina:" FontAttributes="Bold" TextColor="Black" />
+
+                    <CollectionView ItemsSource="{Binding Oficinas}"
+                SelectionMode="Single"
+                SelectedItem="{Binding OficinaSeleccionada}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Frame BorderColor="LightGray" CornerRadius="10" Padding="5" Margin="5">
+                                    <StackLayout>
+                                        <Image Source="{Binding Imagen}" HeightRequest="100" Aspect="AspectFill"/>
+                                        <Label Text="{Binding Nombre}" HorizontalOptions="Center" TextColor="Black"/>
+                                    </StackLayout>
+                                </Frame>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+
+
+
+
+                    <Frame BackgroundColor="#F5F5F5" 
                                CornerRadius="10" 
                                Padding="10"
                                HasShadow="False">

@@ -13,5 +13,9 @@ public class UsuarioUpdateDto
     public string Contrasena { get; set; }
     public int? RolId { get; set; }
     public string ImagenUrl { get; set; }
+
+    public string Personaje { get; set; }
+
+    public string Oficina { get; set; }
     public string Estado { get; set; }
 }

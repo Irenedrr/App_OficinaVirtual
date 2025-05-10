@@ -24,6 +24,12 @@ public class UsuarioCreateDto
     [JsonPropertyName("imagen_url")]
     public string ImagenUrl { get; set; }
 
+    [JsonPropertyName("personaje")]
+    public string Personaje { get; set; }
+
+    [JsonPropertyName("oficina")]
+    public string Oficina { get; set; }
+
     [JsonPropertyName("estado")]
     public string Estado { get; set; } = "conectado";
 }

@@ -47,10 +47,7 @@
         ContentTemplate="{DataTemplate views:LoginView}"
         IsVisible="False" />
 
-    <ShellContent
-        Route="registro"
-        ContentTemplate="{DataTemplate views:RegisterView}"
-        IsVisible="False" />
+    
 
     <ShellContent
         Route="ajustes"

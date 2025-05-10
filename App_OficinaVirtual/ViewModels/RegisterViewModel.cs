@@ -6,6 +6,8 @@ using App_OficinaVirtual.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Diagnostics;
+using App_OficinaVirtual.Models;
+using Microsoft.Maui.Storage;
 
 namespace App_OficinaVirtual.ViewModels;
 
@@ -13,6 +15,28 @@ public partial class RegisterViewModel : ObservableObject
 {
     private readonly UsuarioService _usuarioService;
     private readonly RolService _rolService;
+
+    [ObservableProperty]
+    private OficinaVisual oficinaSeleccionada;
+
+    public ObservableCollection<OficinaVisual> Oficinas { get; } = new()
+    {
+        new OficinaVisual { Nombre = "Comun", Imagen = "mapa_comun.png" },
+        new OficinaVisual { Nombre = "Gaming", Imagen = "mapa_gaming.png" }
+
+    };
+
+    [ObservableProperty]
+    private PersonajeVisual personajeSeleccionado;
+
+    public ObservableCollection<PersonajeVisual> Personajes { get; } = new()
+{
+    new PersonajeVisual { Nombre = "Obrero", Imagen = "obrero.png" },
+    new PersonajeVisual { Nombre = "Directivo", Imagen = "directivo.png" }
+};
+
+
+
 
     public ObservableCollection<RolResponseDto> Roles { get; } = new();
 
@@ -78,6 +102,13 @@ public partial class RegisterViewModel : ObservableObject
 
         try
         {
+            if (OficinaSeleccionada == null)
+            {
+                MensajeError = "Selecciona una oficina.";
+                HayError = true;
+                return;
+            }
+
             var usuarioDto = new UsuarioCreateDto
             {
                 Nombre = Nombre,
@@ -85,8 +116,11 @@ public partial class RegisterViewModel : ObservableObject
                 Contrasena = Contrasena,
                 RolId = RolSeleccionado.Id,
                 ImagenUrl = string.IsNullOrWhiteSpace(ImagenUrl) ? "default.png" : ImagenUrl,
-                Estado = "conectado"
+                Estado = "conectado",
+                Oficina = OficinaSeleccionada.Nombre,
+                Personaje = PersonajeSeleccionado.Nombre
             };
+
 
             var usuarioCreado = await _usuarioService.CrearAsync(usuarioDto);
             if (usuarioCreado != null)
@@ -111,5 +145,29 @@ public partial class RegisterViewModel : ObservableObject
     public void IrALogin()
     {
         Shell.Current.GoToAsync("//login");
+    }
+
+    [RelayCommand]
+    private async Task ElegirImagenAsync()
+    {
+        try
+        {
+            var resultado = await FilePicker.Default.PickAsync(new PickOptions
+            {
+                PickerTitle = "Selecciona una imagen",
+                FileTypes = FilePickerFileType.Images
+            });
+
+            if (resultado != null)
+            {
+                // Almacena la ruta del archivo como URI para MAUI
+                ImagenUrl = resultado.FullPath;
+            }
+        }
+        catch (Exception)
+        {
+            MensajeError = "No se pudo seleccionar una imagen.";
+            HayError = true;
+        }
     }
 }

@@ -14,6 +14,9 @@ public class Usuario
     public string Email { get; set; }
     public string ImagenUrl { get; set; }
     public string Contrasena { get; set; }
+
+    public string Personaje { get; set; }
+    public string Oficina { get; set; } // Nombre de la oficina
     public string Estado { get; set; }
 
     public int? RolId { get; set; }

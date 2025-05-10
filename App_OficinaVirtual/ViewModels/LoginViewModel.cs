@@ -69,7 +69,9 @@ public partial class LoginViewModel : ObservableObject
     [RelayCommand]
     private void IrARegistro()
     {
-        Shell.Current.GoToAsync("//registro", true);
+        Debug.WriteLine("¡IrARegistroCommand se ejecutó!");
+        Shell.Current.GoToAsync("registro");
+
     }
 }
 
