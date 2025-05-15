@@ -31,8 +31,8 @@ public partial class RegisterViewModel : ObservableObject
 
     public ObservableCollection<PersonajeVisual> Personajes { get; } = new()
 {
-    new PersonajeVisual { Nombre = "Evhan", Imagen = "rosa.png" },
-    new PersonajeVisual { Nombre = "Drimon", Imagen = "blanco.png" }
+    new PersonajeVisual { Nombre = "Chica", Imagen = "Chica.png" },
+    new PersonajeVisual { Nombre = "Chico", Imagen = "Chico.png" }
 };
 
 
