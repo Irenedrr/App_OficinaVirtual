@@ -4,12 +4,15 @@ using App_OficinaVirtual.Services;
 using System.Threading.Tasks;
 using Microsoft.Maui.Controls;
 using System.Diagnostics;
+using System.Text.Json;
 
 namespace App_OficinaVirtual.ViewModels;
 
 public partial class LoginViewModel : ObservableObject
 {
     private readonly AuthService _servicioAutenticacion;
+    private readonly UsuarioService _usuarioService;
+
 
     [ObservableProperty]
     private string correo = string.Empty;
@@ -17,15 +20,17 @@ public partial class LoginViewModel : ObservableObject
     [ObservableProperty]
     private string contrasena = string.Empty;
 
-    [ObservableProperty]
+    [ObservableProperty]    
     private string mensajeError = string.Empty;
 
     [ObservableProperty]
     private bool hayError;
 
-    public LoginViewModel(AuthService servicioAutenticacion)
+    public LoginViewModel(AuthService servicioAutenticacion, UsuarioService usuarioService)
     {
         _servicioAutenticacion = servicioAutenticacion;
+        _usuarioService = usuarioService;
+
     }
 
     [RelayCommand]
@@ -50,7 +55,24 @@ public partial class LoginViewModel : ObservableObject
             {
                 
                 Preferences.Default.Set("access_token", _servicioAutenticacion.AccessToken);
+                int usuarioId = Preferences.Get("usuario_id", -1);
+                if (usuarioId != -1)
+                {
+                    var usuario = await _usuarioService.LeerPorIdAsync(usuarioId);
+
+                    var datosJuego = new
+                    {
+                        nombre = usuario.Nombre,
+                        avatar = usuario.Personaje,
+                        oficina = usuario.Oficina
+                    };
+
+                    var rutaJson = @"C:\Users\irene\Desktop\juegos\config_godot.json";
+                    File.WriteAllText(rutaJson, JsonSerializer.Serialize(datosJuego));
+                }
+
                 await Shell.Current.GoToAsync("//home", true);
+
             }
             else
             {

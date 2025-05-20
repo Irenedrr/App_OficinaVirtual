@@ -7,14 +7,10 @@
 
     <Grid>
 
-        <ContentView>
-            <Label Text="Contenido Principal"
-                   HorizontalOptions="Center"
-                   VerticalOptions="Center"
-                   TextColor="Gray" />
-        </ContentView>
 
-       
+        <WebView Source="http://localhost:8080/MiJuego.html" />
+
+
         <Grid VerticalOptions="End"
               HorizontalOptions="FillAndExpand"
               Padding="0,0,0,20">
