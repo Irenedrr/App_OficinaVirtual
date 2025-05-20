@@ -2,6 +2,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:App_OficinaVirtual.ViewModels"
              x:Class="App_OficinaVirtual.Views.MainPage"
+             xmlns:views="clr-namespace:App_OficinaVirtual.Views"
+             xmlns:dto="clr-namespace:App_OficinaVirtual.DTO"
              x:DataType="vm:MainPageViewModel"
              BackgroundColor="White">
 
@@ -10,6 +12,73 @@
 
         <WebView Source="http://localhost:8080/MiJuego.html" />
 
+
+        <ContentView x:Name="UsuariosPanel"
+                     IsVisible="{Binding MostrarUsuariosPanel}"
+                     HorizontalOptions="End"
+                     VerticalOptions="FillAndExpand"
+                     WidthRequest="300"
+                     BackgroundColor="#00000000"
+                     Padding="10">
+
+            <Frame BackgroundColor="#9d8cfb"
+                   CornerRadius="30"
+                   Padding="10"
+                   HasShadow="True"
+                   HorizontalOptions="End"
+                   VerticalOptions="Start"
+                   Margin="0,30,10,0"
+                   WidthRequest="300"
+                   HeightRequest="500">
+
+                <Grid RowDefinitions="Auto, *">
+                    <Grid ColumnDefinitions="*, Auto" Padding="5">
+                        <Label Text="👥 Usuarios Conectados"
+                               FontSize="16"
+                               FontAttributes="Bold"
+                               TextColor="White"
+                               VerticalOptions="Center" />
+
+                        <Button Text="✕"
+                                FontSize="14"
+                                BackgroundColor="Transparent"
+                                TextColor="White"
+                                FontAttributes="Bold"
+                                Command="{Binding CerrarPanelUsuariosCommand}"
+                                Grid.Column="1" />
+                    </Grid>
+
+                    <CollectionView Grid.Row="1"
+                                    ItemsSource="{Binding ListaUsuarios}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="dto:UsuarioResponseDto">
+                                <Grid Padding="10"
+                                      ColumnDefinitions="50, *"
+                                      ColumnSpacing="10">
+                                    <Image Source="{Binding ImagenUrl}"
+                                           WidthRequest="40"
+                                           HeightRequest="40"
+                                           Aspect="AspectFill"
+                                           HorizontalOptions="Center"
+                                           VerticalOptions="Center" />
+
+                                    <Label Text="{Binding Nombre}"
+                                           VerticalOptions="Center"
+                                           TextColor="White"
+                                           FontAttributes="Bold"
+                                           FontSize="14"
+                                           Grid.Column="1" />
+                                </Grid>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </Grid>
+            </Frame>
+        </ContentView>
+
+
+
+        <!-- Panel inferior -->
 
         <Grid VerticalOptions="End"
               HorizontalOptions="FillAndExpand"

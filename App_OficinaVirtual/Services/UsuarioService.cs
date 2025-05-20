@@ -22,25 +22,63 @@ public class UsuarioService
         _options = options;
     }
 
+    private void ConfigurarToken()
+    {
+        var token = Preferences.Get("access_token", string.Empty);
+        if (!string.IsNullOrEmpty(token))
+        {
+            _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+        }
+    }
+
     public async Task<List<UsuarioResponseDto>> LeerTodosAsync()
     {
-        var respuesta = await _httpClient.GetAsync(_baseUrl);
-        if (!respuesta.IsSuccessStatusCode) return new List<UsuarioResponseDto>();
+        try
+        {
+            ConfigurarToken();
+            var respuesta = await _httpClient.GetAsync(_baseUrl);
+            
+            if (!respuesta.IsSuccessStatusCode)
+            {
+                var errorContent = await respuesta.Content.ReadAsStringAsync();
+                Debug.WriteLine($"Error al obtener usuarios: {errorContent}");
+                throw new Exception($"Error al obtener usuarios: {respuesta.StatusCode}");
+            }
 
-        var contenido = await respuesta.Content.ReadAsStringAsync();
-        return JsonSerializer.Deserialize<List<UsuarioResponseDto>>(contenido, _options);
+            var contenido = await respuesta.Content.ReadAsStringAsync();
+            Debug.WriteLine($"Respuesta de usuarios: {contenido}");
+            return JsonSerializer.Deserialize<List<UsuarioResponseDto>>(contenido, _options);
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"Error en LeerTodosAsync: {ex.Message}");
+            throw;
+        }
     }
 
     public async Task<UsuarioResponseDto> LeerPorIdAsync(int id)
     {
-        var respuesta = await _httpClient.GetAsync($"{_baseUrl}/{id}");
-        if (!respuesta.IsSuccessStatusCode) return null;
+        try
+        {
+            ConfigurarToken();
+            var respuesta = await _httpClient.GetAsync($"{_baseUrl}/{id}");
+            
+            if (!respuesta.IsSuccessStatusCode)
+            {
+                var errorContent = await respuesta.Content.ReadAsStringAsync();
+                Debug.WriteLine($"Error al obtener usuario {id}: {errorContent}");
+                return null;
+            }
 
-        var contenido = await respuesta.Content.ReadAsStringAsync();
-        return JsonSerializer.Deserialize<UsuarioResponseDto>(contenido, _options);
+            var contenido = await respuesta.Content.ReadAsStringAsync();
+            return JsonSerializer.Deserialize<UsuarioResponseDto>(contenido, _options);
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"Error en LeerPorIdAsync: {ex.Message}");
+            return null;
+        }
     }
-
-
 
     public async Task<UsuarioResponseDto> CrearAsync(UsuarioCreateDto dto)
     {

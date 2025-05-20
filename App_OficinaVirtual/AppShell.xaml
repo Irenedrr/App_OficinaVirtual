@@ -22,9 +22,12 @@
         <ShellContent ContentTemplate="{DataTemplate views:ComentarioView}" />
     </FlyoutItem>
 
-    <FlyoutItem Icon="usuarios.png" Title="Usuarios">
-        <ShellContent ContentTemplate="{DataTemplate views:UsuariosView}" />
-    </FlyoutItem>
+    <MenuItem 
+    IconImageSource="usuarios.png"
+    Text="Usuarios"
+    Clicked="OnMostrarUsuariosClicked" />
+
+
 
     <FlyoutItem Icon="calendario.png" Title="Eventos">
         <ShellContent ContentTemplate="{DataTemplate views:CalendarioView}" />
@@ -47,12 +50,7 @@
         ContentTemplate="{DataTemplate views:LoginView}"
         IsVisible="False" />
 
-    
-
-    <ShellContent
-        Route="ajustes"
-        ContentTemplate="{DataTemplate views:AjustesView}"
-        IsVisible="False" />
+ 
 
 </Shell>
 

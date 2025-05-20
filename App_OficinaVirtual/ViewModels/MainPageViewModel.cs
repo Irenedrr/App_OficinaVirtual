@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using App_OficinaVirtual.DTO;
+using App_OficinaVirtual.Models;
 using App_OficinaVirtual.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -24,15 +27,49 @@ public partial class MainPageViewModel : ObservableObject
     [ObservableProperty]
     private string fotoPerfil;
 
-    
+    [ObservableProperty]
+    private ObservableCollection<UsuarioResponseDto> listaUsuarios;
+
+    [ObservableProperty]
+    private bool mostrarUsuariosPanel;
+
+
 
     public MainPageViewModel(UsuarioService usuarioService, AuthService authService)
     {
         _usuarioService = usuarioService;
         _authService = authService;
-        EstadoConexion = "Online";
+        EstadoConexion = "Conectado";
         CargarUsuarioAsync();
+        
     }
+
+
+    [RelayCommand]
+    public async Task CargarUsuariosConectadosAsync()
+    {
+        try
+        {
+            var usuarios = await _usuarioService.LeerTodosAsync();
+            if (usuarios == null || !usuarios.Any()) return;
+
+            ListaUsuarios = new ObservableCollection<UsuarioResponseDto>(usuarios);
+            MostrarUsuariosPanel = true;
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"Error cargando usuarios conectados: {ex.Message}");
+        }
+    }
+
+    [RelayCommand]
+    public void CerrarPanelUsuarios()
+    {
+        MostrarUsuariosPanel = false;
+    }
+
+
+
 
     private async void CargarUsuarioAsync()
     {
@@ -55,14 +92,10 @@ public partial class MainPageViewModel : ObservableObject
         }
     }
 
-
-
     [RelayCommand]
     private async Task CerrarSesionAsync()
     {
         _authService.Logout();
         await Shell.Current.GoToAsync("//login", true);
     }
-
-   
 }

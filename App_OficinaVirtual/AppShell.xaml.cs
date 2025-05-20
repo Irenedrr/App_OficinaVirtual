@@ -1,4 +1,5 @@
-﻿using App_OficinaVirtual.Views;
+﻿using App_OficinaVirtual.ViewModels;
+using App_OficinaVirtual.Views;
 
 namespace App_OficinaVirtual;
 
@@ -18,6 +19,17 @@ public partial class AppShell : Shell
 
         Task.Run(async () => await MostrarPantallaInicial());
     }
+
+    private async void OnMostrarUsuariosClicked(object sender, EventArgs e)
+    {
+        if (Current?.CurrentPage is Views.MainPage mainPage &&
+            mainPage.BindingContext is MainPageViewModel vm)
+        {
+            vm.MostrarUsuariosPanel = true;
+            await vm.CargarUsuariosConectadosAsync(); 
+        }
+    }
+
 
     private async Task MostrarPantallaInicial()
     {
