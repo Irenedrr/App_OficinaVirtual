@@ -13,7 +13,6 @@ public partial class AppShell : Shell
         Routing.RegisterRoute("login", typeof(LoginView));
         Routing.RegisterRoute("registro", typeof(RegisterView));
         Routing.RegisterRoute("home", typeof(MainPage));
-        Routing.RegisterRoute("ajustes", typeof(AjustesView));
 
 
 
@@ -29,6 +28,16 @@ public partial class AppShell : Shell
             await vm.CargarUsuariosConectadosAsync(); 
         }
     }
+
+    private async void OnMostrarAjustesClicked(object sender, EventArgs e)
+    {
+        if (Current?.CurrentPage is Views.MainPage mainPage &&
+            mainPage.BindingContext is MainPageViewModel vm)
+        {
+            vm.MostrarAjustesPanel = true;
+        }
+    }
+
 
 
     private async Task MostrarPantallaInicial()

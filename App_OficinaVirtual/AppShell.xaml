@@ -33,9 +33,11 @@
         <ShellContent ContentTemplate="{DataTemplate views:CalendarioView}" />
     </FlyoutItem>
 
-    <FlyoutItem Icon="ajustes.png" Title="Ajustes" Route="ajustes">
-        <ShellContent ContentTemplate="{DataTemplate views:AjustesView}" />
-    </FlyoutItem>
+    <MenuItem
+    IconImageSource="ajustes.png"
+    Text="Ajustes"
+    Clicked="OnMostrarAjustesClicked" />
+
 
     <FlyoutItem Icon="energia.png" Route="login" >
         <ShellContent ContentTemplate="{DataTemplate views:LoginView}" />
