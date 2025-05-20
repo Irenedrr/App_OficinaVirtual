@@ -16,12 +16,15 @@ public class Usuario
     public string Contrasena { get; set; }
 
     public string Personaje { get; set; }
-    public string Oficina { get; set; } // Nombre de la oficina
+    public string Oficina { get; set; }
     public string Estado { get; set; }
 
     public int? RolId { get; set; }
     public Rol Rol { get; set; }
 
     public List<Evento> Eventos { get; set; }
-    public List<Mensaje> Mensajes { get; set; }
+
+    public List<Mensaje> MensajesEnviados { get; set; }
+    public List<Mensaje> MensajesRecibidos { get; set; }
 }
+

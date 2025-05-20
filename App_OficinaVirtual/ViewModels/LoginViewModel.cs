@@ -53,7 +53,7 @@ public partial class LoginViewModel : ObservableObject
             var exito = await _servicioAutenticacion.LoginAsync(Correo, Contrasena);
             if (exito)
             {
-                
+
                 Preferences.Default.Set("access_token", _servicioAutenticacion.AccessToken);
                 int usuarioId = Preferences.Get("usuario_id", -1);
                 if (usuarioId != -1)
@@ -62,7 +62,7 @@ public partial class LoginViewModel : ObservableObject
 
                     var datosJuego = new
                     {
-                        nombre = usuario.Nombre,
+                        nombre = usuario.Nombre = usuario.Nombre.Trim(),
                         avatar = usuario.Personaje,
                         oficina = usuario.Oficina
                     };
@@ -82,7 +82,7 @@ public partial class LoginViewModel : ObservableObject
         }
         catch (Exception ex)
         {
-            
+
             MensajeError = "Error al conectar con el servidor. Por favor, inténtalo de nuevo.";
             HayError = true;
         }

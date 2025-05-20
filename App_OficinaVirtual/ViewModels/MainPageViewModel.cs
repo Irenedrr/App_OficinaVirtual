@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using App_OficinaVirtual.DTO;
 using App_OficinaVirtual.Models;
@@ -146,6 +147,7 @@ public partial class MainPageViewModel : ObservableObject
     [RelayCommand]
     private async Task GuardarCambiosAsync()
     {
+
         try
         {
             int id = Preferences.Get("usuario_id", -1);
@@ -156,8 +158,12 @@ public partial class MainPageViewModel : ObservableObject
                 Nombre = NombreUsuario,
                 Email = Email,
                 Contrasena = Contrasena,
-                ImagenUrl = FotoPerfil
+                ImagenUrl = FotoPerfil,
+                
             };
+
+            Debug.WriteLine("DTO a enviar:");
+            Debug.WriteLine(JsonSerializer.Serialize(dto));
 
             var resultado = await _usuarioService.ActualizarAsync(id, dto);
 
@@ -165,7 +171,10 @@ public partial class MainPageViewModel : ObservableObject
             {
                 Debug.WriteLine("Usuario actualizado correctamente");
                 MostrarAjustesPanel = false;
+                await ActualizarListaUsuariosSinMostrarPanel();
+
             }
+
             else
             {
                 Debug.WriteLine("Error: la respuesta del servidor fue nula");
@@ -176,6 +185,23 @@ public partial class MainPageViewModel : ObservableObject
             Debug.WriteLine("Error guardando cambios: " + ex.Message);
         }
     }
+
+    private async Task ActualizarListaUsuariosSinMostrarPanel()
+    {
+        try
+        {
+            var usuarios = await _usuarioService.LeerTodosAsync();
+            if (usuarios != null && usuarios.Any())
+            {
+                ListaUsuarios = new ObservableCollection<UsuarioResponseDto>(usuarios);
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"Error actualizando lista de usuarios: {ex.Message}");
+        }
+    }
+
 
 
 }

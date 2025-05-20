@@ -30,7 +30,7 @@
 
 
     <FlyoutItem Icon="calendario.png" Title="Eventos">
-        <ShellContent ContentTemplate="{DataTemplate views:CalendarioView}" />
+        
     </FlyoutItem>
 
     <MenuItem
@@ -39,7 +39,7 @@
     Clicked="OnMostrarAjustesClicked" />
 
 
-    <FlyoutItem Icon="energia.png" Route="login" >
+    <FlyoutItem Icon="energia.png" Route="login" Title="Cerrar Sesion" >
         <ShellContent ContentTemplate="{DataTemplate views:LoginView}" />
     </FlyoutItem>
 

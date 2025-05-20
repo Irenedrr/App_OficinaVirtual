@@ -7,20 +7,25 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using App_OficinaVirtual.DTO;
 using System.Diagnostics;
+using System.Text.Json.Serialization;
 
 namespace App_OficinaVirtual.Services;
 
 public class UsuarioService
 {
     private readonly HttpClient _httpClient;
-    private readonly JsonSerializerOptions _options;
-    private readonly string _baseUrl = "http://localhost:8000/usuarios"; 
+    private readonly JsonSerializerOptions _options = new()
+    {
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+    };
+    private readonly string _baseUrl = "http://localhost:8000/usuarios";
 
-    public UsuarioService(HttpClient httpClient, JsonSerializerOptions options)
+    public UsuarioService(HttpClient httpClient)
     {
         _httpClient = httpClient;
-        _options = options;
     }
+
 
     private void ConfigurarToken()
     {
@@ -107,12 +112,37 @@ public class UsuarioService
 
     public async Task<UsuarioResponseDto> ActualizarAsync(int id, UsuarioUpdateDto dto)
     {
-        var respuesta = await _httpClient.PutAsJsonAsync($"{_baseUrl}/{id}", dto);
-        if (!respuesta.IsSuccessStatusCode) return null;
+        try
+        {
+            var json = JsonSerializer.Serialize(dto, _options);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-        var contenido = await respuesta.Content.ReadAsStringAsync();
-        return JsonSerializer.Deserialize<UsuarioResponseDto>(contenido, _options);
+            Console.WriteLine($"➡️ POST URL: {_baseUrl}/actualizar/{id}");
+            Console.WriteLine($"➡️ Body: {json}");
+
+            var response = await _httpClient.PostAsync($"{_baseUrl}/actualizar/{id}", content);
+
+            Console.WriteLine($"⬅️ Código: {(int)response.StatusCode} {response.ReasonPhrase}");
+
+            var body = await response.Content.ReadAsStringAsync();
+            Console.WriteLine($"⬅️ Respuesta: {body}");
+
+            if (!response.IsSuccessStatusCode)
+                return null;
+
+            return JsonSerializer.Deserialize<UsuarioResponseDto>(body, _options);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"❌ ERROR: {ex.Message}");
+            return null;
+        }
     }
+
+
+
+
+
 
     public async Task<bool> EliminarAsync(int id)
     {
