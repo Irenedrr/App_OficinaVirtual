@@ -19,6 +19,8 @@ public partial class AppShell : Shell
         Task.Run(async () => await MostrarPantallaInicial());
     }
 
+
+    //Metodos para mostrar los paneles de la vista principal
     private async void OnMostrarUsuariosClicked(object sender, EventArgs e)
     {
         if (Current?.CurrentPage is Views.MainPage mainPage &&
@@ -50,7 +52,15 @@ public partial class AppShell : Shell
         }
     }
 
-
+    private async void OnMostrarChatClicked(object sender, EventArgs e)
+    {
+        if (Current?.CurrentPage is Views.MainPage mainPage &&
+            mainPage.BindingContext is MainPageViewModel vm)
+        {
+            await vm.CargarUsuariosConectadosAsync(); 
+            vm.MostrarChatPanel = true;
+        }
+    }
 
     private async Task MostrarPantallaInicial()
     {

@@ -18,9 +18,11 @@
         <ShellContent ContentTemplate="{DataTemplate views:MainPage}" />
     </FlyoutItem>
 
-    <FlyoutItem Icon="comentario.png" Title="Chats">
-        <ShellContent ContentTemplate="{DataTemplate views:ComentarioView}" />
-    </FlyoutItem>
+    <MenuItem 
+    IconImageSource="comentario.png"
+    Text="Chats"
+    Clicked="OnMostrarChatClicked" />
+
 
     <MenuItem 
     IconImageSource="usuarios.png"
@@ -43,9 +45,6 @@
     <FlyoutItem Icon="energia.png" Route="login" Title="Cerrar Sesion" >
         <ShellContent ContentTemplate="{DataTemplate views:LoginView}" />
     </FlyoutItem>
-
-
-
 
 
     <ShellContent

@@ -19,6 +19,7 @@ public partial class MainPageViewModel : ObservableObject
     private readonly UsuarioService _usuarioService;
     private readonly EventoService _eventoService;
     private readonly AuthService _authService;
+    private readonly MensajeService _mensajeService;
 
     [ObservableProperty]
     private string nombreUsuario;
@@ -60,8 +61,6 @@ public partial class MainPageViewModel : ObservableObject
     [ObservableProperty]
     private TimeSpan horaEvento = TimeSpan.Zero;
 
-
-
     [ObservableProperty]
     private string tipoEvento;
 
@@ -71,17 +70,33 @@ public partial class MainPageViewModel : ObservableObject
     [ObservableProperty]
     private ObservableCollection<UsuarioResponseDto> participantesSeleccionados;
 
-    
+    //Panel chat
+
+    [ObservableProperty]
+    private bool mostrarChatPanel;
+
+    [ObservableProperty]
+    private UsuarioResponseDto usuarioSeleccionadoChat;
+
+    [ObservableProperty]
+    private ObservableCollection<MensajeResponseDto> mensajesChat;
+
+    [ObservableProperty]
+    private string mensajeNuevo;
 
 
 
 
 
-    public MainPageViewModel(UsuarioService usuarioService, AuthService authService, EventoService eventoService)
+
+
+
+    public MainPageViewModel(UsuarioService usuarioService, AuthService authService, EventoService eventoService, MensajeService mensajeService)
     {
         _usuarioService = usuarioService;
         _authService = authService;
         _eventoService = eventoService;
+        _mensajeService = mensajeService;
 
         ListaUsuarios = new ObservableCollection<UsuarioResponseDto>();
         ParticipantesSeleccionados = new ObservableCollection<UsuarioResponseDto>();
@@ -157,6 +172,32 @@ public partial class MainPageViewModel : ObservableObject
             Debug.WriteLine("Error cargando eventos: " + ex.Message);
         }
     }
+
+
+    private async Task CargarMensajesAsync()
+    {
+        if (UsuarioSeleccionadoChat == null)
+        {
+            Debug.WriteLine("UsuarioSeleccionadoChat es null");
+            return;
+        }
+
+        var todos = await _mensajeService.LeerTodosAsync();
+        var miId = Preferences.Get("usuario_id", -1);
+
+        var relevantes = todos
+            .Where(m => (m.EmisorId == miId && m.ReceptorId == UsuarioSeleccionadoChat.Id) ||
+                        (m.EmisorId == UsuarioSeleccionadoChat.Id && m.ReceptorId == miId))
+            .OrderBy(m => m.Fecha)
+            .ToList();
+
+        Debug.WriteLine($"Mensajes encontrados: {relevantes.Count}");
+
+        MensajesChat = new ObservableCollection<MensajeResponseDto>(relevantes);
+    }
+
+
+
 
 
 
@@ -313,6 +354,54 @@ public partial class MainPageViewModel : ObservableObject
         }
     }
 
+
+    //metodos de mensajes
+
+    [RelayCommand]
+    public async Task SeleccionarUsuarioChatAsync(UsuarioResponseDto usuario)
+    {
+        if (usuario == null)
+        {
+            Debug.WriteLine("⚠️ El parámetro 'usuario' llegó como null");
+            return;
+        }
+
+        Debug.WriteLine($"✅ Usuario tocado: {usuario.Nombre}");
+
+        UsuarioSeleccionadoChat = usuario;
+        MensajeNuevo = string.Empty;
+        MostrarChatPanel = true;
+        await CargarMensajesAsync();
+    }
+
+
+
+    [RelayCommand]
+    public async Task EnviarMensajeAsync()
+    {
+        if (string.IsNullOrWhiteSpace(MensajeNuevo) || UsuarioSeleccionadoChat == null)
+            return;
+
+        var emisorId = Preferences.Get("usuario_id", -1);
+        if (emisorId == -1) return;
+
+        var nuevoMensaje = new MensajeCreateDto
+        {
+            Contenido = MensajeNuevo,
+            EmisorId = emisorId,
+            ReceptorId = UsuarioSeleccionadoChat.Id,
+            Fecha = DateTime.Now
+        };
+
+        var creado = await _mensajeService.CrearAsync(nuevoMensaje);
+        if (creado != null)
+        {
+            MensajeNuevo = string.Empty;
+            await CargarMensajesAsync();
+        }
+    }
+
+
     //cerrar paneles
 
     [RelayCommand]
@@ -340,5 +429,12 @@ public partial class MainPageViewModel : ObservableObject
         MostrarEventosPanel = false;
         MostrarUsuariosPanel = false;
     }
+
+    [RelayCommand]
+    public void CerrarPanelChat()
+    {
+        MostrarChatPanel = false;
+    }
+
 
 }

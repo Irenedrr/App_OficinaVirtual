@@ -41,6 +41,7 @@ namespace App_OficinaVirtual
             builder.Services.AddTransient<MainPage>();
             builder.Services.AddTransient<MainPageViewModel>();
             builder.Services.AddTransient<EventoService>();
+            builder.Services.AddTransient<MensajeService>();
 
             return builder.Build();
         }

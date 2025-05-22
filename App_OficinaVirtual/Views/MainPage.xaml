@@ -1,11 +1,22 @@
 ﻿<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:App_OficinaVirtual.Views"
              xmlns:vm="clr-namespace:App_OficinaVirtual.ViewModels"
              x:Class="App_OficinaVirtual.Views.MainPage"
+             xmlns:converters="clr-namespace:App_OficinaVirtual.Converters"
              xmlns:views="clr-namespace:App_OficinaVirtual.Views"
              xmlns:dto="clr-namespace:App_OficinaVirtual.DTO"
              x:DataType="vm:MainPageViewModel"
              BackgroundColor="White">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:EmisorColorConverter x:Key="EmisorColorConverter" />
+            <converters:EmisorAlignmentConverter x:Key="EmisorAlignmentConverter" />
+            <converters:EmisorNombreConverter x:Key="EmisorNombreConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
 
     <Grid>
 
@@ -265,6 +276,117 @@
                 </ScrollView>
             </Frame>
         </ContentView>
+
+
+        <!-- Panel chat -->
+        <ContentView x:Name="ChatPanel"
+     IsVisible="{Binding MostrarChatPanel}"
+     HorizontalOptions="End"
+     VerticalOptions="FillAndExpand"
+     WidthRequest="320"
+     BackgroundColor="#00000000"
+     Padding="10">
+
+            <Frame BackgroundColor="#9d8cfb"
+       CornerRadius="30"
+       Padding="10"
+       HasShadow="True"
+       HorizontalOptions="End"
+       VerticalOptions="Start"
+       Margin="0,30,10,20"
+       WidthRequest="320"
+       HeightRequest="600">
+
+                <Grid RowDefinitions="Auto, *, Auto" Padding="5">
+
+                    <!-- Cabecera: título + botón cerrar -->
+                    <Grid ColumnDefinitions="*, Auto">
+                        <Label Text="💬 Chat"
+                       FontSize="16"
+                       FontAttributes="Bold"
+                       TextColor="White"
+                       VerticalOptions="Center" />
+                        <Button Text="✕"
+                        FontSize="14"
+                        BackgroundColor="Transparent"
+                        TextColor="White"
+                        FontAttributes="Bold"
+                        Command="{Binding CerrarPanelChatCommand}"
+                        Grid.Column="1" />
+                    </Grid>
+
+                    <!-- Lista de usuarios -->
+                    <CollectionView Grid.Row="1"
+                            ItemsSource="{Binding ListaUsuarios}"
+                            SelectionMode="Single"
+                            SelectedItem="{Binding UsuarioSeleccionadoChat, Mode=TwoWay}"
+                            SelectionChangedCommand="{Binding SeleccionarUsuarioChatCommand}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="dto:UsuarioResponseDto">
+                                <Grid Padding="5" ColumnDefinitions="40, *">
+                                    <Grid.GestureRecognizers>
+                                        <TapGestureRecognizer
+                                            Command="{Binding Source={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContentPage}}, Path=BindingContext.SeleccionarUsuarioChatCommand}"
+                                            CommandParameter="{Binding .}" />   
+                                    </Grid.GestureRecognizers>
+
+                                    <Image Source="{Binding ImagenUrl}"
+                                           WidthRequest="30"
+                                           HeightRequest="30"
+                                           Aspect="AspectFill" />
+                                    <Label Text="{Binding Nombre}" TextColor="White" Grid.Column="1" />
+                                </Grid>
+                            </DataTemplate>
+
+
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+
+                    <!-- Chat-->
+                    <StackLayout Grid.Row="2" Spacing="5">
+                        <Label Text="{Binding UsuarioSeleccionadoChat.Nombre}" 
+                               FontAttributes="Bold" 
+                               FontSize="14" 
+                               TextColor="White"
+                               HorizontalOptions="Center" />
+
+                        <CollectionView ItemsSource="{Binding MensajesChat}" HeightRequest="250">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="dto:MensajeResponseDto">
+                                    <StackLayout Spacing="2">
+                                        <!-- Mostrar nombre del emisor -->
+                                        <Label Text="{Binding EmisorId, Converter={StaticResource EmisorNombreConverter}}" 
+                                               FontSize="11" 
+                                               TextColor="White"
+                                               HorizontalOptions="Start" />
+
+                                        <!-- Burbujas de mensajes -->
+                                        <Frame Padding="5" CornerRadius="10" Margin="0,2"
+                                               BackgroundColor="{Binding EmisorId, Converter={StaticResource EmisorColorConverter}}"
+                                               HorizontalOptions="{Binding EmisorId, Converter={StaticResource EmisorAlignmentConverter}}">
+                                            <Label Text="{Binding Contenido}" FontSize="13" TextColor="Black"/>
+                                        </Frame>
+                                    </StackLayout>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+
+
+                        <Grid ColumnDefinitions="*, Auto" Padding="0,5,0,0">
+                            <Entry Placeholder="Escribe un mensaje..." 
+                           Text="{Binding MensajeNuevo}" Grid.Column="0" />
+                            <Button Text="Enviar" 
+                            Command="{Binding EnviarMensajeCommand}" 
+                            Grid.Column="1" />
+                        </Grid>
+                    </StackLayout>
+
+                </Grid>
+            </Frame>
+        </ContentView>
+
+
+
 
 
 
