@@ -37,7 +37,7 @@ public partial class MainPageViewModel : ObservableObject
     private string contrasena;
 
     [ObservableProperty]
-    private ObservableCollection<UsuarioResponseDto> listaUsuarios;
+    public ObservableCollection<UsuarioResponseDto> listaUsuarios;
 
     [ObservableProperty]
     private bool mostrarUsuariosPanel;
