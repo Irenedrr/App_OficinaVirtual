@@ -100,6 +100,22 @@ public partial class RegisterViewModel : ObservableObject
             return;
         }
 
+        
+        if (Contrasena.Length < 6)
+        {
+            MensajeError = "La contraseña debe tener al menos 6 caracteres.";
+            HayError = true;
+            return;
+        }
+
+       
+        if (!Email.ToLower().EndsWith("@gmail.com"))
+        {
+            MensajeError = "El email debe terminar en @gmail.com.";
+            HayError = true;
+            return;
+        }
+
         try
         {
             if (OficinaSeleccionada == null)
@@ -121,7 +137,6 @@ public partial class RegisterViewModel : ObservableObject
                 Personaje = PersonajeSeleccionado.Nombre
             };
 
-
             var usuarioCreado = await _usuarioService.CrearAsync(usuarioDto);
             if (usuarioCreado != null)
             {
@@ -135,7 +150,6 @@ public partial class RegisterViewModel : ObservableObject
         }
         catch (Exception ex)
         {
-            
             MensajeError = "Error al conectar con el servidor. Por favor, inténtalo de nuevo.";
             HayError = true;
         }
