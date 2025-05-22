@@ -19,4 +19,8 @@ public class UsuarioResponseDto : UsuarioCreateDto
 
     [JsonPropertyName("mensajes_recibidos")]
     public List<MensajeResponseDto> MensajesRecibidos { get; set; }
+
+    public bool IsSeleccionado { get; set; }
+
+
 }

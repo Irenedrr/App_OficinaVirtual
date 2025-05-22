@@ -17,6 +17,7 @@ namespace App_OficinaVirtual.ViewModels;
 public partial class MainPageViewModel : ObservableObject
 {
     private readonly UsuarioService _usuarioService;
+    private readonly EventoService _eventoService;
     private readonly AuthService _authService;
 
     [ObservableProperty]
@@ -43,20 +44,55 @@ public partial class MainPageViewModel : ObservableObject
     [ObservableProperty]
     private bool mostrarAjustesPanel;
 
+    //propiedad panel evento
+    [ObservableProperty]
+    private bool mostrarEventosPanel;
 
- 
+    [ObservableProperty]
+    private string tituloEvento;
+
+    [ObservableProperty]
+    private string descripcionEvento;
+
+    [ObservableProperty]
+    private DateTime fechaEvento = DateTime.Today;
+
+    [ObservableProperty]
+    private TimeSpan horaEvento = TimeSpan.Zero;
 
 
 
-    public MainPageViewModel(UsuarioService usuarioService, AuthService authService)
+    [ObservableProperty]
+    private string tipoEvento;
+
+    [ObservableProperty]
+    private ObservableCollection<EventoResponseDto> listaEventos;
+
+    [ObservableProperty]
+    private ObservableCollection<UsuarioResponseDto> participantesSeleccionados;
+
+    
+
+
+
+
+
+    public MainPageViewModel(UsuarioService usuarioService, AuthService authService, EventoService eventoService)
     {
         _usuarioService = usuarioService;
         _authService = authService;
+        _eventoService = eventoService;
+
+        ListaUsuarios = new ObservableCollection<UsuarioResponseDto>();
+        ParticipantesSeleccionados = new ObservableCollection<UsuarioResponseDto>();
+
+
         EstadoConexion = "Conectado";
         CargarUsuarioAsync();
         
     }
 
+    //Caargar datos
 
     [RelayCommand]
     public async Task CargarUsuariosConectadosAsync()
@@ -75,14 +111,7 @@ public partial class MainPageViewModel : ObservableObject
         }
     }
 
-    [RelayCommand]
-    public void CerrarPanelUsuarios()
-    {
-        MostrarUsuariosPanel = false;
-    }
-
-
-
+  
 
     private async void CargarUsuarioAsync()
     {
@@ -109,18 +138,22 @@ public partial class MainPageViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private async Task CerrarSesionAsync()
+    public async Task CargarEventosAsync()
     {
-        _authService.Logout();
-        await Shell.Current.GoToAsync("//login", true);
+        try
+        {
+            var eventos = await _eventoService.LeerTodosAsync();
+            if (eventos != null && eventos.Any())
+                ListaEventos = new ObservableCollection<EventoResponseDto>(eventos);
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine("Error cargando eventos: " + ex.Message);
+        }
     }
 
 
-    [RelayCommand]
-    private void CerrarPanelAjustes()
-    {
-        MostrarAjustesPanel = false;
-    }
+    //Cambiar foto de perfil
 
     [RelayCommand]
     private async Task CambiarFotoAsync()
@@ -143,6 +176,8 @@ public partial class MainPageViewModel : ObservableObject
             Debug.WriteLine("Error seleccionando imagen: " + ex.Message);
         }
     }
+
+    //Guardar datos
 
     [RelayCommand]
     private async Task GuardarCambiosAsync()
@@ -186,6 +221,75 @@ public partial class MainPageViewModel : ObservableObject
         }
     }
 
+    [RelayCommand]
+    public async Task GuardarEventoAsync()
+    {
+        try
+        {
+            var id = Preferences.Get("usuario_id", -1);
+            if (id == -1) return;
+
+            var participantes = ListaUsuarios
+                .Where(u => u.IsSeleccionado)
+                .Select(u => u.Id)
+                .ToList();
+
+            var nuevoEvento = new EventoCreateDto
+            {
+                Titulo = TituloEvento,
+                Descripcion = DescripcionEvento,
+                FechaEvento = FechaEvento.Date + HoraEvento,
+                Tipo = TipoEvento,
+                CreadorId = id,
+                Participantes = ListaUsuarios
+                 .Where(u => u.IsSeleccionado)
+                 .Select(u => u.Id)
+                 .ToList()
+            };
+
+
+
+
+
+            var creado = await _eventoService.CrearAsync(nuevoEvento);
+
+            if (creado != null)
+            {
+                Debug.WriteLine("Evento creado correctamente");
+                await CargarEventosAsync();
+                LimpiarFormularioEvento();
+                MostrarEventosPanel = false;
+            }
+            else
+            {
+                Debug.WriteLine("Error: evento no creado");
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine("Error guardando evento: " + ex.Message);
+        }
+    }
+
+    //limpiar datos
+    private void LimpiarFormularioEvento()
+    {
+        TituloEvento = string.Empty;
+        DescripcionEvento = string.Empty;
+        TipoEvento = null;
+
+        FechaEvento = DateTime.Today;         
+        HoraEvento = TimeSpan.Zero;           
+
+        ParticipantesSeleccionados = new ObservableCollection<UsuarioResponseDto>();
+
+        foreach (var usuario in ListaUsuarios)
+            usuario.IsSeleccionado = false;
+    }
+
+
+    //Actualizar datos
+
     private async Task ActualizarListaUsuariosSinMostrarPanel()
     {
         try
@@ -202,6 +306,32 @@ public partial class MainPageViewModel : ObservableObject
         }
     }
 
+    //cerrar paneles
 
+    [RelayCommand]
+    private async Task CerrarSesionAsync()
+    {
+        _authService.Logout();
+        await Shell.Current.GoToAsync("//login", true);
+    }
+
+    [RelayCommand]
+    public void CerrarPanelUsuarios()
+    {
+        MostrarUsuariosPanel = false;
+    }
+
+    [RelayCommand]
+    private void CerrarPanelAjustes()
+    {
+        MostrarAjustesPanel = false;
+    }
+
+    [RelayCommand]
+    public void CerrarPanelEventos()
+    {
+        MostrarEventosPanel = false;
+        MostrarUsuariosPanel = false;
+    }
 
 }

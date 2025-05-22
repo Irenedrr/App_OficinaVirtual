@@ -28,10 +28,11 @@
     Clicked="OnMostrarUsuariosClicked" />
 
 
+    <MenuItem 
+    IconImageSource="calendario.png"
+    Text="Eventos"
+    Clicked="OnMostrarEventosClicked" />
 
-    <FlyoutItem Icon="calendario.png" Title="Eventos">
-        
-    </FlyoutItem>
 
     <MenuItem
     IconImageSource="ajustes.png"

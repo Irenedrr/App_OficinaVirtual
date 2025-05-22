@@ -40,6 +40,7 @@ namespace App_OficinaVirtual
             builder.Services.AddTransient<RegisterView>();
             builder.Services.AddTransient<MainPage>();
             builder.Services.AddTransient<MainPageViewModel>();
+            builder.Services.AddTransient<EventoService>();
 
             return builder.Build();
         }

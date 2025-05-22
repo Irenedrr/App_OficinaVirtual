@@ -18,11 +18,8 @@ public class EventoCreateDto
     [JsonPropertyName("creador_id")]
     public int CreadorId { get; set; }
 
-    [JsonPropertyName("fecha_inicio")]
-    public DateTime FechaInicio { get; set; }
-
-    [JsonPropertyName("fecha_fin")]
-    public DateTime FechaFin { get; set; }
+    [JsonPropertyName("fecha_evento")]
+    public DateTime FechaEvento { get; set; }
 
     [JsonPropertyName("tipo")]
     public string Tipo { get; set; } = "reunion"; // valor por defecto como en Python

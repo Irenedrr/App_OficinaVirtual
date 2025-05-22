@@ -149,6 +149,122 @@
                 </ScrollView>
             </Frame>
         </ContentView>
+        
+        <!--Panel eventos-->
+        <ContentView x:Name="EventosPanel"
+             IsVisible="{Binding MostrarEventosPanel}"
+             HorizontalOptions="End"
+             VerticalOptions="FillAndExpand"
+             WidthRequest="320"
+             BackgroundColor="#00000000"
+             Padding="10">
+
+            <Frame BackgroundColor="#9d8cfb"
+           CornerRadius="30"
+           Padding="10"
+           HasShadow="True"
+           HorizontalOptions="End"
+           VerticalOptions="Start"
+           Margin="0,30,10,20"
+           WidthRequest="320"
+           HeightRequest="600">
+
+                <ScrollView>
+                    <Grid RowDefinitions="Auto, *" Padding="5">
+
+                        <!-- Título + botón cerrar -->
+                        <Grid ColumnDefinitions="*, Auto">
+                            <Label Text="📅 Eventos"
+                           FontSize="16"
+                           FontAttributes="Bold"
+                           TextColor="White"
+                           VerticalOptions="Center" />
+
+                            <Button Text="✕"
+                            FontSize="14"
+                            BackgroundColor="Transparent"
+                            TextColor="White"
+                            FontAttributes="Bold"
+                            Command="{Binding CerrarPanelEventosCommand}"
+                            Grid.Column="1" />
+                        </Grid>
+
+                        <StackLayout Grid.Row="1" Padding="0,10,0,0" Spacing="10">
+
+                            <!-- Lista de eventos -->
+                            <CollectionView ItemsSource="{Binding ListaEventos}" HeightRequest="150">
+                                <CollectionView.ItemTemplate>
+                                    <DataTemplate x:DataType="dto:EventoResponseDto">
+                                        
+                                        <Frame BackgroundColor="#fff" Padding="5" CornerRadius="10" Margin="0,2">
+                                            <VerticalStackLayout>
+                                                <Label Text="{Binding Titulo}" FontAttributes="Bold" TextColor="#9d8cfb"/>
+                                                <Label Text="{Binding FechaEvento, StringFormat='Inicio: {0:dd/MM/yyyy}'}" 
+                                                 FontSize="12" TextColor="Black"/>
+                                            </VerticalStackLayout>
+                                        </Frame>
+                                    </DataTemplate>
+                                </CollectionView.ItemTemplate>
+                            </CollectionView>
+
+
+                            <!-- Formulario -->
+                            <Label Text="📝 Crea un evento" 
+                               FontSize="14" 
+                               FontAttributes="Bold" 
+                               TextColor="White" 
+                               HorizontalOptions="Center" />
+                            <Entry Placeholder="Título" Text="{Binding TituloEvento}" />
+                            <Editor Placeholder="Descripción" Text="{Binding DescripcionEvento}" HeightRequest="60" />
+
+                            <Label Text="Fecha y hora del evento" TextColor="White" />
+                            <DatePicker Date="{Binding FechaEvento, Mode=TwoWay}" />
+                            <TimePicker Time="{Binding HoraEvento, Mode=TwoWay}" />
+
+
+
+
+
+                            <Picker Title="Tipo de evento" SelectedItem="{Binding TipoEvento}">
+                                <Picker.ItemsSource>
+                                    <x:Array Type="{x:Type x:String}">
+                                        <x:String>Reunión</x:String>
+                                        <x:String>Formación</x:String>
+                                        <x:String>Otro</x:String>
+                                    </x:Array>
+                                </Picker.ItemsSource>
+                            </Picker>
+
+                            
+                            <!-- Participantes -->
+                            <Label Text="Participantes" TextColor="White" />
+
+                            <CollectionView ItemsSource="{Binding ListaUsuarios}">
+                                <CollectionView.ItemTemplate>
+                                    <DataTemplate x:DataType="dto:UsuarioResponseDto">
+                                        <StackLayout Orientation="Horizontal" Padding="5" Spacing="10">
+                                            <CheckBox IsChecked="{Binding IsSeleccionado}" />
+                                            <Label Text="{Binding Nombre}" TextColor="White" VerticalOptions="Center" />
+                                        </StackLayout>
+                                    </DataTemplate>
+                                </CollectionView.ItemTemplate>
+                            </CollectionView>
+
+
+
+
+
+                            <!-- Botón guardar -->
+                            <Button Text="Guardar Evento"
+                            Command="{Binding GuardarEventoCommand}"
+                            BackgroundColor="White"
+                            TextColor="#9d8cfb"
+                            CornerRadius="20" />
+                        </StackLayout>
+                    </Grid>
+                </ScrollView>
+            </Frame>
+        </ContentView>
 
 
 

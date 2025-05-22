@@ -38,6 +38,18 @@ public partial class AppShell : Shell
         }
     }
 
+    private async void OnMostrarEventosClicked(object sender, EventArgs e)
+    {
+        if (Current?.CurrentPage is Views.MainPage mainPage &&
+            mainPage.BindingContext is MainPageViewModel vm)
+        {
+            await vm.CargarEventosAsync();
+            await vm.CargarUsuariosConectadosAsync();
+            vm.MostrarEventosPanel = true;
+             
+        }
+    }
+
 
 
     private async Task MostrarPantallaInicial()
@@ -58,6 +70,4 @@ public partial class AppShell : Shell
             System.Diagnostics.Debug.WriteLine($"Error en la navegación: {ex.Message}");
         }
     }
-
-
 }
