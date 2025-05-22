@@ -143,14 +143,21 @@ public partial class MainPageViewModel : ObservableObject
         try
         {
             var eventos = await _eventoService.LeerTodosAsync();
-            if (eventos != null && eventos.Any())
-                ListaEventos = new ObservableCollection<EventoResponseDto>(eventos);
+            int usuarioId = Preferences.Get("usuario_id", -1);
+            if (usuarioId == -1) return;
+
+            var filtrados = eventos
+                .Where(e => e.Participantes.Contains(usuarioId))
+                .ToList();
+
+            ListaEventos = new ObservableCollection<EventoResponseDto>(filtrados);
         }
         catch (Exception ex)
         {
             Debug.WriteLine("Error cargando eventos: " + ex.Message);
         }
     }
+
 
 
     //Cambiar foto de perfil
