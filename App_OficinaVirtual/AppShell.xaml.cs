@@ -14,10 +14,29 @@ public partial class AppShell : Shell
         Routing.RegisterRoute("registro", typeof(RegisterView));
         Routing.RegisterRoute("home", typeof(MainPage));
 
+        Navigating += OnShellNavigating;
 
 
         Task.Run(async () => await MostrarPantallaInicial());
     }
+
+    private void OnShellNavigating(object sender, ShellNavigatingEventArgs e)
+    {
+        // Verificamos si se navega hacia "home"
+        if (e.Target.Location.OriginalString.Contains("home", StringComparison.OrdinalIgnoreCase))
+        {
+            // Cierra el menú lateral
+            Shell.Current.FlyoutIsPresented = false;
+
+            // Cierra los paneles flotantes
+            if (Shell.Current.CurrentPage is Views.MainPage mainPage &&
+                mainPage.BindingContext is MainPageViewModel vm)
+            {
+                vm.CerrarTodosLosPaneles();
+            }
+        }
+    }
+
 
 
     //Metodos para mostrar los paneles de la vista principal
@@ -68,11 +87,11 @@ public partial class AppShell : Shell
         {
             if (Preferences.ContainsKey("access_token"))
             {
-                await GoToAsync("//home");
+                await Shell.Current.GoToAsync("//home");
             }
             else
             {
-                await GoToAsync("//login");
+                await Shell.Current.GoToAsync("//login");
             }
         }
         catch (Exception ex)
@@ -80,4 +99,5 @@ public partial class AppShell : Shell
             System.Diagnostics.Debug.WriteLine($"Error en la navegación: {ex.Message}");
         }
     }
+
 }

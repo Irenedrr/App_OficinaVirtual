@@ -434,6 +434,16 @@ public partial class MainPageViewModel : ObservableObject
     public void CerrarPanelChat()
     {
         MostrarChatPanel = false;
+        MostrarUsuariosPanel = false;
+    }
+
+
+    public void CerrarTodosLosPaneles()
+    {
+        MostrarUsuariosPanel = false;
+        MostrarAjustesPanel = false;
+        MostrarEventosPanel = false;
+        MostrarChatPanel = false;
     }
 
 
