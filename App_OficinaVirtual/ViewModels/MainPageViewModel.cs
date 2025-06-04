@@ -306,7 +306,7 @@ public partial class MainPageViewModel : ObservableObject
                 Debug.WriteLine("Evento creado correctamente");
                 await CargarEventosAsync();
                 LimpiarFormularioEvento();
-                MostrarEventosPanel = false;
+                
             }
             else
             {
