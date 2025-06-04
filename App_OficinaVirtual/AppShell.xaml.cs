@@ -55,9 +55,10 @@ public partial class AppShell : Shell
         if (Current?.CurrentPage is Views.MainPage mainPage &&
             mainPage.BindingContext is MainPageViewModel vm)
         {
-            vm.MostrarAjustesPanel = true;
+            vm.AbrirPanelUnico("ajustes");
         }
     }
+
 
     private async void OnMostrarEventosClicked(object sender, EventArgs e)
     {

@@ -118,7 +118,7 @@ public partial class MainPageViewModel : ObservableObject
             if (usuarios == null || !usuarios.Any()) return;
 
             ListaUsuarios = new ObservableCollection<UsuarioResponseDto>(usuarios);
-            MostrarUsuariosPanel = true;
+            AbrirPanelUnico("usuarios");
         }
         catch (Exception ex)
         {
@@ -253,7 +253,7 @@ public partial class MainPageViewModel : ObservableObject
             if (resultado != null)
             {
                 Debug.WriteLine("Usuario actualizado correctamente");
-                MostrarAjustesPanel = false;
+                mostrarAjustesPanel = false;
                 await ActualizarListaUsuariosSinMostrarPanel();
 
             }
@@ -335,6 +335,21 @@ public partial class MainPageViewModel : ObservableObject
             usuario.IsSeleccionado = false;
     }
 
+    [RelayCommand]
+    public void MostrarPanelEventos()
+    {
+        AbrirPanelUnico("eventos");
+    }
+
+    [RelayCommand]
+    public async Task MostrarPanelAjustes()
+    {
+       
+        AbrirPanelUnico("ajustes");
+    }
+
+
+
 
     //Actualizar datos
 
@@ -370,7 +385,7 @@ public partial class MainPageViewModel : ObservableObject
 
         UsuarioSeleccionadoChat = usuario;
         MensajeNuevo = string.Empty;
-        MostrarChatPanel = true;
+        AbrirPanelUnico("chat");
         await CargarMensajesAsync();
     }
 
@@ -401,6 +416,39 @@ public partial class MainPageViewModel : ObservableObject
         }
     }
 
+    public void AbrirPanelUnico(string panel)
+    {
+        MostrarUsuariosPanel = false;
+        MostrarAjustesPanel = false;
+        MostrarEventosPanel = false;
+        MostrarChatPanel = false;
+
+        // Forzar notificación
+        OnPropertyChanged(nameof(MostrarUsuariosPanel));
+        OnPropertyChanged(nameof(MostrarAjustesPanel));
+        OnPropertyChanged(nameof(MostrarEventosPanel));
+        OnPropertyChanged(nameof(MostrarChatPanel));
+
+        // Activar el que corresponde
+        switch (panel)
+        {
+            case "usuarios":
+                MostrarUsuariosPanel = true;
+                break;
+            case "ajustes":
+                MostrarAjustesPanel = true;
+                break;
+            case "eventos":
+                MostrarEventosPanel = true;
+                break;
+            case "chat":
+                MostrarChatPanel = true;
+                break;
+        }
+    }
+
+
+
 
     //cerrar paneles
 
@@ -421,6 +469,7 @@ public partial class MainPageViewModel : ObservableObject
     private void CerrarPanelAjustes()
     {
         MostrarAjustesPanel = false;
+        
     }
 
     [RelayCommand]
