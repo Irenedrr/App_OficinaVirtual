@@ -139,6 +139,17 @@ public class UsuarioService
         }
     }
 
+    public async Task<int> ObtenerIdPorCorreoAsync(string correo)
+    {
+        var usuarios = await LeerTodosAsync(); // o un endpoint específico por correo
+        var usuario = usuarios.FirstOrDefault(u => u.Email.Equals(correo, StringComparison.OrdinalIgnoreCase));
+
+        if (usuario != null)
+            return usuario.Id;
+
+        return -1;
+    }
+
 
 
 

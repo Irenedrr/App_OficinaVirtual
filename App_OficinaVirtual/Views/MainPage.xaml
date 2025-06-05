@@ -21,7 +21,7 @@
     <Grid>
 
 
-        <WebView Source="http://localhost:8080/MiJuego.html" />
+        <WebView Source="http://localhost:8080/index.html" />
 
         <!-- Panel usuarios -->
         <ContentView x:Name="UsuariosPanel"

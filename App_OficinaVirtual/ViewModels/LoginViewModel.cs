@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.Maui.Controls;
 using System.Diagnostics;
 using System.Text.Json;
+using System.Net.NetworkInformation;
+using System.Net.Sockets;
 
 namespace App_OficinaVirtual.ViewModels;
 
@@ -32,7 +34,6 @@ public partial class LoginViewModel : ObservableObject
         _usuarioService = usuarioService;
 
     }
-
     [RelayCommand]
     private async Task IniciarSesionAsync()
     {
@@ -53,26 +54,52 @@ public partial class LoginViewModel : ObservableObject
             var exito = await _servicioAutenticacion.LoginAsync(Correo, Contrasena);
             if (exito)
             {
-
                 Preferences.Default.Set("access_token", _servicioAutenticacion.AccessToken);
-                int usuarioId = Preferences.Get("usuario_id", -1);
-                if (usuarioId != -1)
+
+                int usuarioId = await _usuarioService.ObtenerIdPorCorreoAsync(Correo);
+
+                if (usuarioId == -1)
                 {
-                    var usuario = await _usuarioService.LeerPorIdAsync(usuarioId);
+                    MensajeError = "No se pudo obtener el ID del usuario.";
+                    HayError = true;
+                    return;
+                }
 
-                    var datosJuego = new
-                    {
-                        nombre = usuario.Nombre = usuario.Nombre.Trim(),
-                        avatar = usuario.Personaje,
-                        oficina = usuario.Oficina
-                    };
+                Preferences.Default.Set("usuario_id", usuarioId);
 
-                    var rutaJson = @"C:\Users\irene\Desktop\juegos\config_godot.json";
-                    File.WriteAllText(rutaJson, JsonSerializer.Serialize(datosJuego));
+                string ipLocal = ObtenerIPLocal();
+                var backendUrl = $"http://{ipLocal}:8000";
+
+                // 🔁 Petición directa al backend para obtener datos del usuario
+                using var httpClient = new HttpClient();
+                var url = $"{backendUrl}/usuarios/config_juego/{usuarioId}";
+
+                var response = await httpClient.GetAsync(url);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    MensajeError = "No se pudieron obtener los datos del usuario.";
+                    HayError = true;
+                    return;
+                }
+
+                var contenido = await response.Content.ReadAsStringAsync();
+
+                // ✅ Escribimos directamente el JSON que Godot espera
+                var rutaConfig = @"C:\Users\irene\Desktop\oficina\juego\html\config_godot.json";
+                Console.WriteLine("Ruta real: " + rutaConfig);
+
+                File.WriteAllText(rutaConfig, contenido);
+                Console.WriteLine($"📁 Config escrito en: {rutaConfig}");
+
+                // 🚀 Lanzar Godot
+                var godotPath = @"C:\Users\irene\Desktop\OficinaVirtual\OficinaVirtualJuego.exe";
+                if (File.Exists(godotPath))
+                {
+                    Process.Start(godotPath);
                 }
 
                 await Shell.Current.GoToAsync("//home", true);
-
             }
             else
             {
@@ -82,11 +109,12 @@ public partial class LoginViewModel : ObservableObject
         }
         catch (Exception ex)
         {
-
+            Debug.WriteLine($"❌ Error en login: {ex.Message}");
             MensajeError = "Error al conectar con el servidor. Por favor, inténtalo de nuevo.";
             HayError = true;
         }
     }
+
 
     [RelayCommand]
     private void IrARegistro()
@@ -95,6 +123,29 @@ public partial class LoginViewModel : ObservableObject
         Shell.Current.GoToAsync("registro");
 
     }
+
+    public static string ObtenerIPLocal()
+    {
+        foreach (var netInterface in NetworkInterface.GetAllNetworkInterfaces())
+        {
+            if (netInterface.OperationalStatus == OperationalStatus.Up &&
+                netInterface.NetworkInterfaceType != NetworkInterfaceType.Loopback)
+            {
+                var ipProps = netInterface.GetIPProperties();
+
+                foreach (var addr in ipProps.UnicastAddresses)
+                {
+                    if (addr.Address.AddressFamily == AddressFamily.InterNetwork)
+                    {
+                        return addr.Address.ToString();
+                    }
+                }
+            }
+        }
+
+        return "127.0.0.1"; // Fallback si no encuentra ninguna
+    }
+
 }
 
 
