@@ -22,7 +22,7 @@ public class EventoCreateDto
     public DateTime FechaEvento { get; set; }
 
     [JsonPropertyName("tipo")]
-    public string Tipo { get; set; } = "reunion"; // valor por defecto como en Python
+    public string Tipo { get; set; } = "reunion";
 
     [JsonPropertyName("participantes")]
     public List<int> Participantes { get; set; } = new();

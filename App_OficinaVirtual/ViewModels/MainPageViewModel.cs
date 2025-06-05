@@ -216,7 +216,7 @@ public partial class MainPageViewModel : ObservableObject
 
             if (result != null)
             {
-                FotoPerfil = result.FullPath; // Guarda la ruta absoluta de la imagen
+                FotoPerfil = result.FullPath; 
             }
         }
         catch (Exception ex)
@@ -255,6 +255,8 @@ public partial class MainPageViewModel : ObservableObject
                 Debug.WriteLine("Usuario actualizado correctamente");
                 mostrarAjustesPanel = false;
                 await ActualizarListaUsuariosSinMostrarPanel();
+                await Shell.Current.DisplayAlert("Éxito", "Cambios guardados correctamente", "OK");
+
 
             }
 
@@ -377,11 +379,11 @@ public partial class MainPageViewModel : ObservableObject
     {
         if (usuario == null)
         {
-            Debug.WriteLine("⚠️ El parámetro 'usuario' llegó como null");
+            Debug.WriteLine("El parámetro 'usuario' llegó como null");
             return;
         }
 
-        Debug.WriteLine($"✅ Usuario tocado: {usuario.Nombre}");
+        Debug.WriteLine($" Usuario tocado: {usuario.Nombre}");
 
         UsuarioSeleccionadoChat = usuario;
         MensajeNuevo = string.Empty;

@@ -174,7 +174,7 @@ public partial class RegisterViewModel : ObservableObject
 
             if (resultado != null)
             {
-                // Almacena la ruta del archivo como URI para MAUI
+               
                 ImagenUrl = resultado.FullPath;
             }
         }

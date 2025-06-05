@@ -37,7 +37,6 @@ public partial class LoginViewModel : ObservableObject
     [RelayCommand]
     private async Task IniciarSesionAsync()
     {
-        Debug.WriteLine("El comando de iniciar sesión se ejecutó");
 
         MensajeError = "";
         HayError = false;
@@ -70,7 +69,7 @@ public partial class LoginViewModel : ObservableObject
                 string ipLocal = ObtenerIPLocal();
                 var backendUrl = $"http://{ipLocal}:8000";
 
-                // 🔁 Petición directa al backend para obtener datos del usuario
+                //  Petición directa al backend para obtener datos del usuario
                 using var httpClient = new HttpClient();
                 var url = $"{backendUrl}/usuarios/config_juego/{usuarioId}";
 
@@ -85,14 +84,14 @@ public partial class LoginViewModel : ObservableObject
 
                 var contenido = await response.Content.ReadAsStringAsync();
 
-                // ✅ Escribimos directamente el JSON que Godot espera
+                //  Escribimos directamente el JSON que Godot espera
                 var rutaConfig = @"C:\Users\irene\Desktop\oficina\juego\html\config_godot.json";
                 Console.WriteLine("Ruta real: " + rutaConfig);
 
                 File.WriteAllText(rutaConfig, contenido);
-                Console.WriteLine($"📁 Config escrito en: {rutaConfig}");
+                Console.WriteLine($" Config escrito en: {rutaConfig}");
 
-                // 🚀 Lanzar Godot
+                // Lanzar Godot
                 var godotPath = @"C:\Users\irene\Desktop\OficinaVirtual\OficinaVirtualJuego.exe";
                 if (File.Exists(godotPath))
                 {
@@ -109,7 +108,7 @@ public partial class LoginViewModel : ObservableObject
         }
         catch (Exception ex)
         {
-            Debug.WriteLine($"❌ Error en login: {ex.Message}");
+            Debug.WriteLine($" Error en login: {ex.Message}");
             MensajeError = "Error al conectar con el servidor. Por favor, inténtalo de nuevo.";
             HayError = true;
         }
@@ -143,7 +142,7 @@ public partial class LoginViewModel : ObservableObject
             }
         }
 
-        return "127.0.0.1"; // Fallback si no encuentra ninguna
+        return "127.0.0.1"; 
     }
 
 }
