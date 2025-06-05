@@ -100,7 +100,7 @@ public partial class RegisterViewModel : ObservableObject
             return;
         }
 
-        
+
         if (Contrasena.Length < 6)
         {
             MensajeError = "La contraseña debe tener al menos 6 caracteres.";
@@ -108,7 +108,7 @@ public partial class RegisterViewModel : ObservableObject
             return;
         }
 
-       
+
         if (!Email.ToLower().EndsWith("@gmail.com"))
         {
             MensajeError = "El email debe terminar en @gmail.com.";

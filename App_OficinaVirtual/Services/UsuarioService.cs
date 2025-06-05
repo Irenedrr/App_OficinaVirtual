@@ -42,7 +42,7 @@ public class UsuarioService
         {
             ConfigurarToken();
             var respuesta = await _httpClient.GetAsync(_baseUrl);
-            
+
             if (!respuesta.IsSuccessStatusCode)
             {
                 var errorContent = await respuesta.Content.ReadAsStringAsync();
@@ -67,7 +67,7 @@ public class UsuarioService
         {
             ConfigurarToken();
             var respuesta = await _httpClient.GetAsync($"{_baseUrl}/{id}");
-            
+
             if (!respuesta.IsSuccessStatusCode)
             {
                 var errorContent = await respuesta.Content.ReadAsStringAsync();
@@ -91,7 +91,7 @@ public class UsuarioService
         {
             var json = JsonSerializer.Serialize(dto, _options);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
-            
+
             var respuesta = await _httpClient.PostAsync(_baseUrl, content);
             if (!respuesta.IsSuccessStatusCode)
             {

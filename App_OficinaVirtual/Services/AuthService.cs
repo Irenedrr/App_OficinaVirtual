@@ -42,7 +42,7 @@ public class AuthService
             { "password", password }
         };
 
-        var content = new FormUrlEncodedContent(parametros); 
+        var content = new FormUrlEncodedContent(parametros);
 
 
 
@@ -102,6 +102,7 @@ public class AuthService
         }
     }
 }
+
 
 
 

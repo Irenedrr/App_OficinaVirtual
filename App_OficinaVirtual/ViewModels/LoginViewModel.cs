@@ -22,7 +22,7 @@ public partial class LoginViewModel : ObservableObject
     [ObservableProperty]
     private string contrasena = string.Empty;
 
-    [ObservableProperty]    
+    [ObservableProperty]
     private string mensajeError = string.Empty;
 
     [ObservableProperty]
@@ -147,5 +147,3 @@ public partial class LoginViewModel : ObservableObject
     }
 
 }
-
-
