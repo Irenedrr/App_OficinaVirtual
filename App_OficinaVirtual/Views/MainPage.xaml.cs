@@ -14,12 +14,17 @@ namespace App_OficinaVirtual.Views
         {
             InitializeComponent();
             BindingContext = mainViewModel;
+
         }
+
 
         protected override void OnAppearing()
         {
             base.OnAppearing();
             Shell.Current.FlyoutBehavior = FlyoutBehavior.Flyout;
+
+            if (BindingContext is MainPageViewModel vm)
+                vm.IniciarDetectorInactividad(); // ← Añadido para el temporizador de inactividad
         }
 
         private void CheckBox_CheckedChanged(object sender, CheckedChangedEventArgs e)
@@ -42,5 +47,20 @@ namespace App_OficinaVirtual.Views
                 }
             }
         }
+
+
+        private void OnActividadDetectada(object sender, EventArgs e)
+        {
+            if (BindingContext is MainPageViewModel vm)
+                vm.RegistrarActividadDesdeVista();
+        }
+
+        private void OnActividadDetectada(object sender, PanUpdatedEventArgs e)
+        {
+            if (BindingContext is MainPageViewModel vm)
+                vm.RegistrarActividadDesdeVista();
+        }
+
+       
     }
 }   

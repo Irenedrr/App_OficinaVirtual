@@ -18,7 +18,12 @@
     </ContentPage.Resources>
 
 
-    <Grid>
+    <Grid x:Name="MainGrid">
+
+        <Grid.GestureRecognizers>
+            <TapGestureRecognizer Tapped="OnActividadDetectada"/>
+            <PanGestureRecognizer PanUpdated="OnActividadDetectada"/>
+        </Grid.GestureRecognizers>
 
 
         <WebView Source="http://localhost:8080/index.html" />

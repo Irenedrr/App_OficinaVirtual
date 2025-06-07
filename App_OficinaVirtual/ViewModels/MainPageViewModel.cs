@@ -11,6 +11,8 @@ using App_OficinaVirtual.Models;
 using App_OficinaVirtual.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using System.Timers;
+using Microsoft.Maui.ApplicationModel;
 
 namespace App_OficinaVirtual.ViewModels;
 
@@ -84,8 +86,9 @@ public partial class MainPageViewModel : ObservableObject
     [ObservableProperty]
     private string mensajeNuevo;
 
+    private System.Timers.Timer _timerInactividad;
 
-
+    private DateTime _ultimaActividad = DateTime.Now;
 
 
 
@@ -104,7 +107,38 @@ public partial class MainPageViewModel : ObservableObject
 
         EstadoConexion = "Conectado";
         CargarUsuarioAsync();
-        
+
+        IniciarDetectorInactividad();
+    }
+    public void IniciarDetectorInactividad()
+    {
+        _timerInactividad = new System.Timers.Timer(1000);// Cada 1 segundo
+        _timerInactividad.Elapsed += VerificarInactividad;
+        _timerInactividad.AutoReset = true;
+        _timerInactividad.Start();
+    }
+
+    private void VerificarInactividad(object sender, ElapsedEventArgs e)
+    {
+        var tiempoInactivo = DateTime.Now - _ultimaActividad;
+
+        if (tiempoInactivo.TotalSeconds >= 60 && EstadoConexion != "Ausente")
+        {
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                EstadoConexion = "Ausente";
+            });
+        }
+    }
+
+    public void RegistrarActividadDesdeVista()
+    {
+        _ultimaActividad = DateTime.Now;
+
+        if (EstadoConexion != "Conectado")
+        {
+            EstadoConexion = "Conectado";
+        }
     }
 
     //Caargar datos
