@@ -26,7 +26,7 @@
         </Grid.GestureRecognizers>
 
 
-        <WebView Source="http://localhost:8080/index.html" />
+        <WebView Source="http://localhost:8080" />
 
         <!-- Panel usuarios -->
         <ContentView x:Name="UsuariosPanel"
@@ -435,7 +435,7 @@
 
                     <StackLayout VerticalOptions="Center" Spacing="0">
                         <Label Text="{Binding NombreUsuario}" FontAttributes="Bold" FontSize="12" TextColor="White" />
-                        <Label Text="{Binding EstadoConexion}" FontSize="10" TextColor="Black" />
+                        <Label Text="{Binding EstadoConexion}" FontSize="12" TextColor="Black" FontAttributes="Bold" />
                     </StackLayout>
 
                 </StackLayout>
