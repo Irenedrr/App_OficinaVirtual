@@ -11,19 +11,18 @@ namespace App_OficinaVirtual.Services;
 
 public class EventoService
 {
-    private readonly HttpClient _httpClient;
     private readonly JsonSerializerOptions _options;
     private readonly string _baseUrl = "http://localhost:8000/eventos";
 
-    public EventoService(HttpClient httpClient, JsonSerializerOptions options)
+    public EventoService(JsonSerializerOptions options)
     {
-        _httpClient = httpClient;
         _options = options;
     }
 
     public async Task<List<EventoResponseDto>> LeerTodosAsync()
     {
-        var respuesta = await _httpClient.GetAsync(_baseUrl);
+        var _httpClient = Helpers.HttpClientHelper.GetClient();
+        var respuesta = await _httpClient.GetAsync($"{_baseUrl}/");
         if (!respuesta.IsSuccessStatusCode) return new List<EventoResponseDto>();
 
         var contenido = await respuesta.Content.ReadAsStringAsync();
@@ -32,6 +31,7 @@ public class EventoService
 
     public async Task<EventoResponseDto> LeerPorIdAsync(int id)
     {
+        var _httpClient = Helpers.HttpClientHelper.GetClient();
         var respuesta = await _httpClient.GetAsync($"{_baseUrl}/{id}");
         if (!respuesta.IsSuccessStatusCode) return null;
 
@@ -41,7 +41,8 @@ public class EventoService
 
     public async Task<EventoResponseDto> CrearAsync(EventoCreateDto dto)
     {
-        var respuesta = await _httpClient.PostAsJsonAsync(_baseUrl, dto);
+        var _httpClient = Helpers.HttpClientHelper.GetClient();
+        var respuesta = await _httpClient.PostAsJsonAsync($"{_baseUrl}/", dto);
         if (!respuesta.IsSuccessStatusCode) return null;
 
         var contenido = await respuesta.Content.ReadAsStringAsync();
@@ -50,6 +51,7 @@ public class EventoService
 
     public async Task<EventoResponseDto> ActualizarAsync(int id, EventoUpdateDto dto)
     {
+        var _httpClient = Helpers.HttpClientHelper.GetClient();
         var respuesta = await _httpClient.PutAsJsonAsync($"{_baseUrl}/{id}", dto);
         if (!respuesta.IsSuccessStatusCode) return null;
 
@@ -59,6 +61,7 @@ public class EventoService
 
     public async Task<bool> EliminarAsync(int id)
     {
+        var _httpClient = Helpers.HttpClientHelper.GetClient();
         var respuesta = await _httpClient.DeleteAsync($"{_baseUrl}/{id}");
         return respuesta.IsSuccessStatusCode;
     }

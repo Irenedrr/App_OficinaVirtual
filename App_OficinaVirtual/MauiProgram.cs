@@ -30,7 +30,7 @@ namespace App_OficinaVirtual
                 WriteIndented = true
             });
 
-            builder.Services.AddSingleton<HttpClient>();
+            //builder.Services.AddSingleton<HttpClient>();
             builder.Services.AddSingleton<AuthService>();
             builder.Services.AddSingleton<UsuarioService>();
             builder.Services.AddSingleton<RolService>();

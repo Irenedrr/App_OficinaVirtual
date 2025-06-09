@@ -33,7 +33,7 @@ public partial class LoginViewModel : ObservableObject
     {
         _servicioAutenticacion = servicioAutenticacion;
         _usuarioService = usuarioService;
-
+        Preferences.Default.Remove("access_token");
     }
     [RelayCommand]
     private async Task IniciarSesionAsync()
@@ -67,7 +67,7 @@ public partial class LoginViewModel : ObservableObject
                 Preferences.Default.Set("usuario_id", usuarioId);
 
                 // 🔁 Configura datos del usuario activo en la API
-                using var httpClient = new HttpClient();
+                var httpClient = Helpers.HttpClientHelper.GetClient();
                 var backendUrl = $"http://{ObtenerIPLocal()}:8000";
                 var endpoint = $"{backendUrl}/sessiones/login"; // <--- ¡importante! este endpoint es el correcto
 
@@ -91,7 +91,7 @@ public partial class LoginViewModel : ObservableObject
                 }
 
                 // ✅ Ir a la página con WebView (donde tienes el juego)
-                await Shell.Current.GoToAsync("//home", true);
+                await Shell.Current.GoToAsync("home", true);
             }
             else
             {

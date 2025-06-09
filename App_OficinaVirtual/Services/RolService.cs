@@ -11,19 +11,18 @@ namespace App_OficinaVirtual.Services;
 
 public class RolService
 {
-    private readonly HttpClient _httpClient;
     private readonly JsonSerializerOptions _options;
     private readonly string _baseUrl = "http://localhost:8000/roles";
 
-    public RolService(HttpClient httpClient, JsonSerializerOptions options)
+    public RolService(JsonSerializerOptions options)
     {
-        _httpClient = httpClient;
         _options = options;
     }
 
     public async Task<List<RolResponseDto>> LeerTodosAsync()
     {
-        var respuesta = await _httpClient.GetAsync(_baseUrl);
+        var _httpClient = Helpers.HttpClientHelper.GetClient();
+        var respuesta = await _httpClient.GetAsync($"{_baseUrl}/");
         if (!respuesta.IsSuccessStatusCode) return new List<RolResponseDto>();
 
         var contenido = await respuesta.Content.ReadAsStringAsync();
@@ -32,6 +31,7 @@ public class RolService
 
     public async Task<RolResponseDto> LeerPorIdAsync(int id)
     {
+        var _httpClient = Helpers.HttpClientHelper.GetClient();
         var respuesta = await _httpClient.GetAsync($"{_baseUrl}/{id}");
         if (!respuesta.IsSuccessStatusCode) return null;
 
@@ -41,7 +41,8 @@ public class RolService
 
     public async Task<RolResponseDto> CrearAsync(RolCreateDto dto)
     {
-        var respuesta = await _httpClient.PostAsJsonAsync(_baseUrl, dto);
+        var _httpClient = Helpers.HttpClientHelper.GetClient();
+        var respuesta = await _httpClient.PostAsJsonAsync($"{_baseUrl}/", dto);
         if (!respuesta.IsSuccessStatusCode) return null;
 
         var contenido = await respuesta.Content.ReadAsStringAsync();
@@ -50,6 +51,7 @@ public class RolService
 
     public async Task<RolResponseDto> ActualizarAsync(int id, RolUpdateDto dto)
     {
+        var _httpClient = Helpers.HttpClientHelper.GetClient();
         var respuesta = await _httpClient.PutAsJsonAsync($"{_baseUrl}/{id}", dto);
         if (!respuesta.IsSuccessStatusCode) return null;
 
@@ -59,6 +61,7 @@ public class RolService
 
     public async Task<bool> EliminarAsync(int id)
     {
+        var _httpClient = Helpers.HttpClientHelper.GetClient();
         var respuesta = await _httpClient.DeleteAsync($"{_baseUrl}/{id}");
         return respuesta.IsSuccessStatusCode;
     }

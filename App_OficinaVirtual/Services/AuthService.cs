@@ -8,7 +8,6 @@ namespace App_OficinaVirtual.Services;
 
 public class AuthService
 {
-    private readonly HttpClient _httpClient;
     private readonly JsonSerializerOptions _serializerOptions;
     private const string BaseUrl = "http://localhost:8000";
     private string _accessToken = string.Empty;
@@ -25,11 +24,10 @@ public class AuthService
         return claim != null ? int.Parse(claim.Value) : -1;
     }
 
-    public AuthService(HttpClient httpClient, JsonSerializerOptions serializerOptions)
+    public AuthService(JsonSerializerOptions serializerOptions)
     {
-        _httpClient = httpClient;
         _serializerOptions = serializerOptions;
-        InicializarTokenDesdePreferencias();
+        //InicializarTokenDesdePreferencias();
     }
 
     public string AccessToken => _accessToken;
@@ -49,6 +47,7 @@ public class AuthService
         try
         {
             Debug.WriteLine($"URL de la petición: {BaseUrl}/usuarios/login");
+            var _httpClient = Helpers.HttpClientHelper.GetClient();
             HttpResponseMessage response = await _httpClient.PostAsync($"{BaseUrl}/usuarios/login", content);
 
             Debug.WriteLine($"Código de estado: {response.StatusCode}");
@@ -90,15 +89,14 @@ public class AuthService
     {
         _accessToken = null;
         Preferences.Remove("access_token");
-        _httpClient.DefaultRequestHeaders.Authorization = null;
     }
 
-    public void InicializarTokenDesdePreferencias()
-    {
-        _accessToken = Preferences.Get("access_token", null);
-        if (!string.IsNullOrEmpty(_accessToken))
-        {
-            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _accessToken);
-        }
-    }
+    //public void InicializarTokenDesdePreferencias()
+    //{
+    //    _accessToken = Preferences.Get("access_token", null);
+    //    if (!string.IsNullOrEmpty(_accessToken))
+    //    {
+    //        _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _accessToken);
+    //    }
+    //}
 }

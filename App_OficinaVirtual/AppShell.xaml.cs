@@ -9,7 +9,7 @@ public partial class AppShell : Shell
     {
         InitializeComponent();
 
-        
+
         Routing.RegisterRoute("login", typeof(LoginView));
         Routing.RegisterRoute("registro", typeof(RegisterView));
         Routing.RegisterRoute("home", typeof(MainPage));
@@ -17,7 +17,7 @@ public partial class AppShell : Shell
         Navigating += OnShellNavigating;
 
 
-        Task.Run(async () => await MostrarPantallaInicial());
+        //Task.Run(async () => await MostrarPantallaInicial());
     }
 
     private void OnShellNavigating(object sender, ShellNavigatingEventArgs e)
@@ -46,7 +46,7 @@ public partial class AppShell : Shell
             mainPage.BindingContext is MainPageViewModel vm)
         {
             vm.MostrarUsuariosPanel = true;
-            await vm.CargarUsuariosConectadosAsync(); 
+            await vm.CargarUsuariosConectadosAsync();
         }
     }
 
@@ -68,7 +68,7 @@ public partial class AppShell : Shell
             await vm.CargarEventosAsync();
             await vm.CargarUsuariosConectadosAsync();
             vm.MostrarEventosPanel = true;
-             
+
         }
     }
 
@@ -77,9 +77,23 @@ public partial class AppShell : Shell
         if (Current?.CurrentPage is Views.MainPage mainPage &&
             mainPage.BindingContext is MainPageViewModel vm)
         {
-            await vm.CargarUsuariosConectadosAsync(); 
+            await vm.CargarUsuariosConectadosAsync();
             vm.MostrarChatPanel = true;
         }
+    }
+
+    private async void OnCerrarSesionClicked(object sender, EventArgs e)
+    {
+        Preferences.Remove("access_token");
+        Preferences.Remove("usuario_id");
+
+        // Limpia la navegación y vuelve a login como raíz
+        await Shell.Current.GoToAsync("//login");
+    }
+
+    private async void OnMostrarHomeClicked(object sender, EventArgs e)
+    {
+        await Shell.Current.GoToAsync("//home", true);
     }
 
     private async Task MostrarPantallaInicial()

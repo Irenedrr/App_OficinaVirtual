@@ -488,13 +488,6 @@ public partial class MainPageViewModel : ObservableObject
 
     //cerrar paneles
 
-    [RelayCommand]
-    private async Task CerrarSesionAsync()
-    {
-        _authService.Logout();
-        Preferences.Remove("access_token");
-        await Shell.Current.GoToAsync("//login", true);
-    }
 
     [RelayCommand]
     public void CerrarPanelUsuarios()

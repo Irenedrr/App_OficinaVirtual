@@ -13,11 +13,16 @@
         </StackLayout>
     </Shell.FlyoutHeader>
 
-    
-    <FlyoutItem Icon="hogar.png" Route="home" Title="Inicio">
-        <ShellContent ContentTemplate="{DataTemplate views:MainPage}" />
-    </FlyoutItem>
 
+    <!--<FlyoutItem Icon="hogar.png" Route="home" Title="Inicio">
+        <ShellContent ContentTemplate="{DataTemplate views:MainPage}" />
+    </FlyoutItem>-->
+
+    <MenuItem
+    IconImageSource="hogar.png"
+    Text="Inicio"
+    Clicked="OnMostrarHomeClicked" />
+    
     <MenuItem 
     IconImageSource="comentario.png"
     Text="Chats"
@@ -41,19 +46,17 @@
     Text="Ajustes"
     Clicked="OnMostrarAjustesClicked" />
 
-
-    <FlyoutItem Icon="energia.png" Route="login" Title="Cerrar Sesion" >
-        <ShellContent ContentTemplate="{DataTemplate views:LoginView}" />
-    </FlyoutItem>
+    
+    <MenuItem
+        Text="Cerrar Sesion"
+        IconImageSource="energia.png"
+    Clicked="OnCerrarSesionClicked" />
 
 
     <ShellContent
         Route="login"
-        ContentTemplate="{DataTemplate views:LoginView}"
-        IsVisible="False" />
+        ContentTemplate="{DataTemplate views:LoginView}"  />
 
- 
+
 
 </Shell>
-
-

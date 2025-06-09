@@ -13,7 +13,6 @@ namespace App_OficinaVirtual.Services;
 
 public class UsuarioService
 {
-    private readonly HttpClient _httpClient;
     private readonly JsonSerializerOptions _options = new()
     {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
@@ -21,27 +20,27 @@ public class UsuarioService
     };
     private readonly string _baseUrl = "http://localhost:8000/usuarios";
 
-    public UsuarioService(HttpClient httpClient)
+    public UsuarioService()
     {
-        _httpClient = httpClient;
+     
     }
 
 
-    private void ConfigurarToken()
-    {
-        var token = Preferences.Get("access_token", string.Empty);
-        if (!string.IsNullOrEmpty(token))
-        {
-            _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
-        }
-    }
+    //private void ConfigurarToken()
+    //{
+    //    var token = Preferences.Get("access_token", string.Empty);
+    //    if (!string.IsNullOrEmpty(token))
+    //    {
+    //        _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+    //    }
+    //}
 
     public async Task<List<UsuarioResponseDto>> LeerTodosAsync()
     {
         try
         {
-            ConfigurarToken();
-            var respuesta = await _httpClient.GetAsync(_baseUrl);
+            var _httpClient = Helpers.HttpClientHelper.GetClient();
+            var respuesta = await _httpClient.GetAsync($"{_baseUrl}/");
 
             if (!respuesta.IsSuccessStatusCode)
             {
@@ -65,7 +64,7 @@ public class UsuarioService
     {
         try
         {
-            ConfigurarToken();
+            var _httpClient = Helpers.HttpClientHelper.GetClient();
             var respuesta = await _httpClient.GetAsync($"{_baseUrl}/{id}");
 
             if (!respuesta.IsSuccessStatusCode)
@@ -92,7 +91,8 @@ public class UsuarioService
             var json = JsonSerializer.Serialize(dto, _options);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-            var respuesta = await _httpClient.PostAsync(_baseUrl, content);
+            var _httpClient = Helpers.HttpClientHelper.GetClient();
+            var respuesta = await _httpClient.PostAsync($"{_baseUrl}/", content);
             if (!respuesta.IsSuccessStatusCode)
             {
                 var errorContent = await respuesta.Content.ReadAsStringAsync();
@@ -120,6 +120,7 @@ public class UsuarioService
             Console.WriteLine($"➡️ POST URL: {_baseUrl}/actualizar/{id}");
             Console.WriteLine($"➡️ Body: {json}");
 
+            var _httpClient = Helpers.HttpClientHelper.GetClient();
             var response = await _httpClient.PostAsync($"{_baseUrl}/actualizar/{id}", content);
 
             Console.WriteLine($"⬅️ Código: {(int)response.StatusCode} {response.ReasonPhrase}");
@@ -157,6 +158,7 @@ public class UsuarioService
 
     public async Task<bool> EliminarAsync(int id)
     {
+        var _httpClient = Helpers.HttpClientHelper.GetClient();
         var respuesta = await _httpClient.DeleteAsync($"{_baseUrl}/{id}");
         return respuesta.IsSuccessStatusCode;
     }
