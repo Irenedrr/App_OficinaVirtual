@@ -26,7 +26,8 @@
         </Grid.GestureRecognizers>
 
 
-        <WebView Source="http://localhost:8080" />
+        <WebView Source="http://127.0.0.1:8080/index.html" />
+
 
         <!-- Panel usuarios -->
         <ContentView x:Name="UsuariosPanel"

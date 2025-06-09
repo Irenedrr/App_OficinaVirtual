@@ -160,4 +160,22 @@ public class UsuarioService
         var respuesta = await _httpClient.DeleteAsync($"{_baseUrl}/{id}");
         return respuesta.IsSuccessStatusCode;
     }
+
+    public async Task<string> ObtenerNombrePorId(int id)
+    {
+        var usuario = await LeerPorIdAsync(id);
+        return usuario?.Nombre; // Asegúrate de que la propiedad se llame así en el DTO
+    }
+
+    public async Task<string> ObtenerPersonajePorId(int id)
+    {
+        var usuario = await LeerPorIdAsync(id);
+        return usuario?.Personaje; // Asegúrate de que exista esta propiedad en UsuarioResponseDto
+    }
+
+    public async Task<string> ObtenerOficinaPorId(int id)
+    {
+        var usuario = await LeerPorIdAsync(id);
+        return usuario?.Oficina; // Igual aquí, verifica la propiedad
+    }
 }

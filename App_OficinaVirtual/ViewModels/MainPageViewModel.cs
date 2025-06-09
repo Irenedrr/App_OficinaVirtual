@@ -492,6 +492,7 @@ public partial class MainPageViewModel : ObservableObject
     private async Task CerrarSesionAsync()
     {
         _authService.Logout();
+        Preferences.Remove("access_token");
         await Shell.Current.GoToAsync("//login", true);
     }
 

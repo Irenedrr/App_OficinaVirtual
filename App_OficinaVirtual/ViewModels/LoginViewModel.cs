@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Text.Json;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
+using System.Text;
 
 namespace App_OficinaVirtual.ViewModels;
 
@@ -37,7 +38,6 @@ public partial class LoginViewModel : ObservableObject
     [RelayCommand]
     private async Task IniciarSesionAsync()
     {
-
         MensajeError = "";
         HayError = false;
 
@@ -66,38 +66,31 @@ public partial class LoginViewModel : ObservableObject
 
                 Preferences.Default.Set("usuario_id", usuarioId);
 
-                string ipLocal = ObtenerIPLocal();
-                var backendUrl = $"http://{ipLocal}:8000";
-
-                //  Petición directa al backend para obtener datos del usuario
+                // 🔁 Configura datos del usuario activo en la API
                 using var httpClient = new HttpClient();
-                var url = $"{backendUrl}/usuarios/config_juego/{usuarioId}";
+                var backendUrl = $"http://{ObtenerIPLocal()}:8000";
+                var endpoint = $"{backendUrl}/sessiones/login"; // <--- ¡importante! este endpoint es el correcto
 
-                var response = await httpClient.GetAsync(url);
+                var usuarioActivo = new
+                {
+                    usuario_id = usuarioId,
+                    nombre = await _usuarioService.ObtenerNombrePorId(usuarioId),
+                    personaje = await _usuarioService.ObtenerPersonajePorId(usuarioId),
+                    oficina = await _usuarioService.ObtenerOficinaPorId(usuarioId)
+                };
 
+                var json = JsonSerializer.Serialize(usuarioActivo);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var response = await httpClient.PostAsync(endpoint, content);
                 if (!response.IsSuccessStatusCode)
                 {
-                    MensajeError = "No se pudieron obtener los datos del usuario.";
+                    MensajeError = "No se pudo comunicar con la API.";
                     HayError = true;
                     return;
                 }
 
-                var contenido = await response.Content.ReadAsStringAsync();
-
-                //  Escribimos directamente el JSON que Godot espera
-                var rutaConfig = @"C:\Users\irene\Desktop\oficina\juego\html\config_godot.json";
-                Console.WriteLine("Ruta real: " + rutaConfig);
-
-                File.WriteAllText(rutaConfig, contenido);
-                Console.WriteLine($" Config escrito en: {rutaConfig}");
-
-                // Lanzar Godot
-                var godotPath = @"C:\Users\irene\Desktop\OficinaVirtual\OficinaVirtualJuego.exe";
-                if (File.Exists(godotPath))
-                {
-                    Process.Start(godotPath);
-                }
-
+                // ✅ Ir a la página con WebView (donde tienes el juego)
                 await Shell.Current.GoToAsync("//home", true);
             }
             else
@@ -108,11 +101,12 @@ public partial class LoginViewModel : ObservableObject
         }
         catch (Exception ex)
         {
-            Debug.WriteLine($" Error en login: {ex.Message}");
+            Debug.WriteLine($"Error en login: {ex.Message}");
             MensajeError = "Error al conectar con el servidor. Por favor, inténtalo de nuevo.";
             HayError = true;
         }
     }
+
 
 
     [RelayCommand]
